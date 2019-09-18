@@ -1,0 +1,112 @@
+<resources>
+    <string name="app_name">TeraSystemHRIS</string>
+    <string name="tera_logo">TeraSystem Logo</string>
+    <string name="what_is_your_userID">User ID</string>
+    <string name="what_is_your_password">Password</string>
+    <string name="login">Login</string>
+    <string name="logout">Logout</string>
+    <string name="signup">Sign Up</string>
+    <string name="network_error">Network Error</string>
+    <string name="action_favorite">LOGOUT</string>
+    <string name="toolbar_update_profile_title">Update Profile</string>
+    <string name="profile_name_text">JERICHO ISAAC R. MAGALLANES</string>
+    <string name="id_label_text">ID Number</string>
+    <string name="profile_id_text">2019015</string>
+    <string name="email_label_text">Email Address</string>
+    <string name="profile_email_text">jericho.magallanes@terasystem.com</string>
+    <string name="mobile_label_text">Mobile Number</string>
+    <string name="profile_mobile_text">09176554356</string>
+    <string name="update_button_text">Update</string>
+    <!--<string name="update_profile_id_text">2019015</string>-->
+    <string name="update_firstname_label_text">First Name</string>
+    <!--<string name="update_profile_firstname_text">Jericho Isaac</string>-->
+    <string name="update_middlename_label_text">Middle Name</string>
+    <!--<string name="update_profile_middlename_text">Requintina</string>-->
+    <string name="update_lastname_label_text">Last Name</string>
+    <!--<string name="update_profile_email_text">""</string>-->
+    <!--<string name="update_profile_mobile_text">""</string>-->
+    <!--<string name="update_profile_landline_text">""</string>-->
+    <string name="update_landline_label_text">Landline</string>
+    <string name="success_title">Success</string>
+    <string name="success_message_text">You have successfully update your profile!</string>
+    <string name="ok_button_text">OK</string>
+    <string name="title_activity_logout">Logout</string>
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+    <string name="nav_header_title">Android Studio</string>
+    <string name="nav_header_subtitle">android.studio@android.com</string>
+    <string name="nav_header_desc">Navigation header</string>
+    <string name="action_settings">Settings</string>
+
+    <string name="menu_home">Home</string>
+    <string name="menu_gallery">Gallery</string>
+    <string name="menu_slideshow">Slideshow</string>
+    <string name="menu_tools">Tools</string>
+    <string name="menu_share">Share</string>
+    <string name="menu_send">Send</string>
+    <string name="what_is_your_middlename">Optional</string>
+    <string name="what_is_your_landline">Optional</string>
+    <string name="connection_timeout_message">Connection timed out</string>
+    <string name="server_error">Could not connect to the server</string>
+    <string name="no_internet_message">No Internet Connection</string>
+    <string name="logs_error_message">Failed to retrieve logs</string>
+    <string name="logs_update_error_message">Failed to update logs</string>
+    <string name="leave_update_error_message">Failed to file leave</string>
+    <string name="close_icon">X</string>
+
+    <string name="logs_icon">Time Logs</string>
+    <string name="leaves_icon">Leaves</string>
+    <string name="clients_icon">Clients</string>
+    <string name="me_icon">Me</string>
+
+    <string name="logs_title">Time Logs</string>
+    <string name="leaves_title">Leaves</string>
+    <string name="clients_title">Clients</string>
+    <string name="profile_title">Profile</string>
+    <string name="date_title">DATE</string>
+    <string name="time_in_title">IN</string>
+    <string name="time_out_title">OUT</string>
+    <string name="addtimelog_title">Add Time Log</string>
+    <string name="done_title">Done</string>
+    <string name="fileleave_title">File Leave</string>
+    <string name="log_date">Log Date</string>
+    <string name="time_in_office">Time in Office</string>
+    <string name="to_label">to</string>
+    <string name="break_in_office">Break Time</string>
+    <string name="log_type_title">Type</string>
+    <string name="addtimelogsuccess_title">Success</string>
+    <string name="time_title">Time</string>
+    <string name="time_log_success_message">You have successfully saved the following details:</string>
+    <string name="time_in_text">Time In</string>
+    <string name="break_out_text">Break Out</string>
+    <string name="break_in_text">Break In</string>
+    <string name="time_out_text">Time Out</string>
+    <string name="cancel_title">Cancel</string>
+    <string name="remaining_leaves_title">Leaves Remaining:</string>
+    <string name="vacation_leave_title">Vacation Leave</string>
+    <string name="sick_leave_title">Sick Leave</string>
+    <string name="used_leaves_title">Leaves Used:</string>
+    <string name="leave_date_title">DATE</string>
+    <string name="no_of_days">NO. OF DAYS</string>
+    <string name="to_title_text">to</string>
+    <string name="start_date_title">Start Date</string>
+    <string name="end_date_title">End Date</string>
+    <string name="file_leave_date">Date</string>
+    <string name="fileleavesuccess_title">Success</string>
+    <string name="no_type_selected_error">Please Choose Leave Type</string>
+    <string name="date_error">Invalid Start and End Date</string>
+
+    <string-array name="log_type">
+        <item>Time In</item>
+        <item>Break Out</item>
+        <item>Break In</item>
+        <item>Time Out</item>
+    </string-array>
+
+    <string-array name="time_type">
+        <item>Whole Day</item>
+        <item>Morning</item>
+        <item>Afternoon</item>
+    </string-array>
+
+</resources>
