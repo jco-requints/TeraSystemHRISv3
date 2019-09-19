@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+            android:id="@+id/logs"
+            android:icon="@drawable/logsicon"
+            android:title="@string/logs_icon" />
+
+    <item
+            android:id="@+id/leaves"
+            android:icon="@drawable/leavesicon"
+            android:title="@string/leaves_icon" />
+
+    <item
+            android:id="@+id/clients"
+            android:icon="@drawable/clienticon"
+            android:title="@string/clients_icon" />
+
+    <item
+            android:id="@+id/profile"
+            android:icon="@drawable/meicon"
+            android:title="@string/me_icon" />
+
+</menu>

@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:app="http://schemas.android.com/apk/res-auto"
+                xmlns:android="http://schemas.android.com/apk/res/android"
+                xmlns:tools="http://schemas.android.com/tools"
+                android:fitsSystemWindows="true"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical"
+                android:theme="@style/AppTheme"
+                tools:context=".ui.FragmentActivity">
+
+    <androidx.appcompat.widget.Toolbar
+            android:id="@+id/toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            android:background="#1D8ECE"
+            android:elevation="4dp"
+            android:theme="@style/ToolbarTheme"
+            app:popupTheme="@style/ThemeOverlay.AppCompat.Light">
+
+        <Button
+                android:scaleType="fitCenter"
+                android:textAlignment="textStart"
+                android:layout_gravity="start"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" android:id="@+id/backBtn" android:textColor="#FFFFFF"
+                android:background="@null"/>
+
+
+        <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text=""
+                tools:text="@string/profile_title"
+                android:layout_gravity="center"
+                android:id="@+id/title_toolbar"
+                tools:layout_editor_absoluteY="18dp"
+                tools:layout_editor_absoluteX="185dp"
+                android:textSize="24sp"
+                android:textColor="#FFFFFF"/>
+
+        <Button
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_gravity="end"
+                tools:text="Logout"
+                tools:textSize="24dp"
+                android:layout_alignParentEnd="true"
+                android:background="@null"
+                android:textColor="#FFFFFF"
+                android:scaleType="centerInside"
+                android:textAlignment="center"
+                android:id="@+id/toolbar_button" android:layout_alignParentRight="true"/>
+
+    </androidx.appcompat.widget.Toolbar>
+
+    <FrameLayout
+            android:id="@+id/container"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_above="@+id/bottom_navigation"
+            android:layout_below="@+id/toolbar"/>
+
+    <com.google.android.material.bottomnavigation.BottomNavigationView
+            android:id="@+id/bottom_navigation"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            app:labelVisibilityMode="labeled"
+            app:itemIconTint="@drawable/selector_bottom_nav"
+            app:itemTextColor="@drawable/selector_bottom_nav"
+            app:elevation="4dp"
+            app:menu="@menu/navigation"/>
+
+</RelativeLayout>

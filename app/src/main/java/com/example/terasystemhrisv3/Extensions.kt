@@ -2,6 +2,8 @@ package com.example.terasystemhrisv3
 
 import android.content.Context
 import android.content.DialogInterface
+import android.net.ConnectivityManager
+import android.net.NetworkInfo
 import android.text.Editable
 import android.text.TextWatcher
 import android.view.LayoutInflater
@@ -43,3 +45,16 @@ fun alertDialog(context: Context, error: String) {
   alertDialog.show()
 }
 
+fun isConnected(context: Context): Boolean {
+  val connectivity = context.getSystemService(
+    Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+  if (connectivity != null) {
+    val info = connectivity.allNetworkInfo
+    if (info != null)
+      for (i in info)
+        if (i.state == NetworkInfo.State.CONNECTED) {
+          return true
+        }
+  }
+  return false
+}

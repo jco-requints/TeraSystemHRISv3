@@ -2,17 +2,12 @@ package com.example.terasystemhrisv3.services
 
 import android.annotation.SuppressLint
 import android.os.AsyncTask
-import android.os.Handler
-import android.os.Looper
-import android.util.Log
 import java.io.BufferedReader
 import java.io.InputStreamReader
 import java.io.OutputStreamWriter
 import java.lang.Exception
-import java.lang.StringBuilder
 import java.net.HttpURLConnection
 import java.net.URL
-import java.net.URLEncoder
 
 @SuppressLint("StaticFieldLeak")
 class WebServiceConnection(private var networkRequestInterface: NetworkRequestInterface) : AsyncTask<String, Int, String?>() {
@@ -58,7 +53,7 @@ class WebServiceConnection(private var networkRequestInterface: NetworkRequestIn
         }
         catch (ex: java.net.ConnectException)
         {
-            result = "No Internet Connection"
+            result = "Could not connect to the server"
         }
         catch (ex: java.net.SocketTimeoutException) {
             result = "Connection Timed Out"

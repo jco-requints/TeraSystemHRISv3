@@ -1,0 +1,198 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                xmlns:app="http://schemas.android.com/apk/res-auto" xmlns:tools="http://schemas.android.com/tools"
+                android:orientation="vertical"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@color/white">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            tools:context=".ProfileFragment">
+
+        <ScrollView
+                android:id="@+id/activity_profile_scrollview"
+                android:orientation="vertical"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintHorizontal_bias="1.0"
+                app:layout_constraintBottom_toBottomOf="parent"
+                android:layout_marginBottom="8dp">
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:background="@drawable/my_border"
+                        android:id="@+id/constraintLayout"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent"
+                        android:layout_marginStart="16dp"
+                        android:layout_marginEnd="16dp"
+                        android:layout_marginTop="16dp"
+                        app:layout_constraintBottom_toTopOf="@+id/linearLayout"
+                >
+
+                    <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:id="@+id/initials"
+                            android:textSize="24sp"
+                            android:background="@drawable/circle_background"
+                            android:layout_centerInParent="true"
+                            android:gravity="center"
+                            android:textColor="#FFFFFF"
+                            app:layout_constraintTop_toTopOf="parent"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintHorizontal_bias="0.0"
+                            app:layout_constraintVertical_bias="0.008"
+                            app:layout_constraintDimensionRatio="W, 1:1"
+                            android:layout_marginStart="16dp"
+                            android:layout_marginTop="16dp" android:layout_marginLeft="16dp"/>
+
+                    <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:id="@+id/name_text"
+                            style="@style/NameStyle"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            android:layout_marginEnd="16dp"
+                            app:layout_constraintStart_toEndOf="@+id/initials"
+                            android:layout_marginStart="8dp"
+                            app:layout_constraintTop_toTopOf="parent"
+                            app:layout_constraintHorizontal_bias="0.0"
+                            android:layout_marginTop="8dp"
+                            android:textStyle="bold" android:layout_marginRight="16dp" android:layout_marginLeft="8dp"/>
+
+                    <TextView
+                            android:text="@string/id_label_text"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:id="@+id/id_label"
+                            android:layout_marginTop="8dp"
+                            app:layout_constraintTop_toBottomOf="@+id/name_text"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            android:layout_marginEnd="16dp"
+                            android:layout_marginStart="8dp"
+                            app:layout_constraintStart_toEndOf="@+id/initials"
+                            app:layout_constraintHorizontal_bias="0.0" android:layout_marginRight="16dp"
+                            android:layout_marginLeft="8dp"/>
+
+                    <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:id="@+id/profile_id"
+                            style="@style/NameStyle"
+                            android:layout_marginStart="8dp"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            android:layout_marginEnd="16dp"
+                            app:layout_constraintHorizontal_bias="0.0"
+                            app:layout_constraintTop_toBottomOf="@+id/id_label"
+                            app:layout_constraintStart_toEndOf="@+id/initials"
+                            android:layout_marginTop="4dp" android:layout_marginLeft="8dp"
+                            android:layout_marginRight="16dp"/>
+
+                    <TextView
+                            android:text="@string/email_label_text"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:id="@+id/update_email_label"
+                            android:layout_marginStart="8dp"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            android:layout_marginEnd="16dp"
+                            app:layout_constraintHorizontal_bias="0.0"
+                            app:layout_constraintTop_toBottomOf="@+id/profile_id"
+                            app:layout_constraintStart_toEndOf="@+id/initials"
+                            android:layout_marginTop="8dp" android:layout_marginLeft="8dp"
+                            android:layout_marginRight="16dp"/>
+
+                    <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:id="@+id/profile_email"
+                            style="@style/NameStyle"
+                            android:layout_marginStart="8dp"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            android:layout_marginEnd="16dp"
+                            app:layout_constraintHorizontal_bias="0.0"
+                            app:layout_constraintTop_toBottomOf="@+id/update_email_label"
+                            app:layout_constraintStart_toEndOf="@+id/initials"
+                            android:layout_marginTop="4dp" android:layout_marginLeft="8dp"
+                            android:layout_marginRight="16dp"/>
+
+                    <TextView
+                            android:text="@string/mobile_label_text"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="8dp"
+                            android:id="@+id/mobile_label"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            android:layout_marginEnd="16dp"
+                            app:layout_constraintHorizontal_bias="0.0"
+                            app:layout_constraintTop_toBottomOf="@+id/profile_email"
+                            app:layout_constraintStart_toEndOf="@+id/initials"
+                            android:layout_marginTop="8dp" android:layout_marginLeft="8dp"
+                            android:layout_marginRight="16dp"/>
+
+                    <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="8dp"
+                            android:id="@+id/profile_number"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            android:layout_marginEnd="16dp"
+                            app:layout_constraintHorizontal_bias="0.0"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            style="@style/NameStyle"
+                            app:layout_constraintStart_toEndOf="@+id/initials"
+                            app:layout_constraintTop_toBottomOf="@+id/mobile_label"
+                            app:layout_constraintVertical_bias="0.0"
+                            android:layout_marginTop="4dp"
+                            android:layout_marginBottom="8dp" android:layout_marginLeft="8dp"
+                            android:layout_marginRight="16dp"/>
+
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+                <LinearLayout
+                        android:orientation="vertical"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        app:layout_constraintTop_toBottomOf="@+id/constraintLayout"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        android:id="@+id/linearLayout"
+                        android:layout_marginBottom="8dp">
+
+                    <Button
+                            android:text="@string/update_button_text"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center_vertical|center_horizontal"
+                            android:id="@+id/update_button"
+                            android:background="@null"
+                            android:textColor="#048dc9"
+                            android:layout_marginStart="16dp"
+                            android:layout_marginEnd="16dp"
+                            android:layout_marginTop="16dp"
+                    />
+                </LinearLayout>
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+        </ScrollView>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</RelativeLayout>
