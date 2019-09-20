@@ -78,7 +78,10 @@ class ProfileFragment : Fragment() {
 
     companion object {
         val TAG: String = ProfileFragment::class.java.simpleName
-        fun newInstance(bundle: Bundle) = ProfileFragment().apply {
+        fun newInstance(accountDetails: AccountDetails) = ProfileFragment().apply {
+            val bundle = Bundle()
+            bundle.putParcelable("keyAccountDetails", accountDetails)
+            this.arguments = bundle
             this.arguments = bundle
         }
     }

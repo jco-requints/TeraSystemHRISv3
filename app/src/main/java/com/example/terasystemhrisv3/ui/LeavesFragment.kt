@@ -150,7 +150,9 @@ class LeavesFragment : Fragment(), NetworkRequestInterface {
 
     companion object {
         val TAG: String = LeavesFragment::class.java.simpleName
-        fun newInstance(bundle: Bundle) = LeavesFragment().apply {
+        fun newInstance(accountDetails:AccountDetails) = LeavesFragment().apply {
+            val bundle = Bundle()
+            bundle.putParcelable("keyAccountDetails", accountDetails)
             this.arguments = bundle
         }
     }

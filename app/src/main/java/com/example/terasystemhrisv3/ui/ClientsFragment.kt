@@ -8,6 +8,7 @@ import android.view.View
 import android.view.ViewGroup
 import com.example.terasystemhrisv3.AppBarController
 import com.example.terasystemhrisv3.R
+import com.example.terasystemhrisv3.model.AccountDetails
 
 class ClientsFragment : Fragment() {
 
@@ -33,7 +34,9 @@ class ClientsFragment : Fragment() {
 
     companion object {
         val TAG: String = ClientsFragment::class.java.simpleName
-        fun newInstance(bundle: Bundle) = ClientsFragment().apply {
+        fun newInstance(accountDetails: AccountDetails) = ClientsFragment().apply {
+            val bundle = Bundle()
+            bundle.putParcelable("keyAccountDetails", accountDetails)
             this.arguments = bundle
         }
     }

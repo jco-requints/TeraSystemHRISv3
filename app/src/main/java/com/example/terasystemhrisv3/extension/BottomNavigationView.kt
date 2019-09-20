@@ -1,10 +1,12 @@
 package com.example.terasystemhrisv3.extension
 
+import android.annotation.SuppressLint
 import com.google.android.material.bottomnavigation.BottomNavigationItemView
 import com.google.android.material.bottomnavigation.BottomNavigationMenuView
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import android.util.Log
 
+@SuppressLint("RestrictedApi")
 fun BottomNavigationView.disableShiftMode() {
     val menuView = getChildAt(0) as BottomNavigationMenuView
     try {

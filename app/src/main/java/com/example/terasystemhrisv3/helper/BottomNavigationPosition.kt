@@ -3,6 +3,7 @@ package com.example.terasystemhrisv3.helper
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import com.example.terasystemhrisv3.R
+import com.example.terasystemhrisv3.model.AccountDetails
 import com.example.terasystemhrisv3.ui.ClientsFragment
 import com.example.terasystemhrisv3.ui.LeavesFragment
 import com.example.terasystemhrisv3.ui.LogsFragment
@@ -23,11 +24,11 @@ fun findNavigationPositionById(id: Int): BottomNavigationPosition = when (id) {
     else -> BottomNavigationPosition.LOGS
 }
 
-fun BottomNavigationPosition.createFragment(bundle: Bundle): Fragment = when (this) {
-    BottomNavigationPosition.LOGS -> LogsFragment.newInstance(bundle)
-    BottomNavigationPosition.LEAVES -> LeavesFragment.newInstance(bundle)
-    BottomNavigationPosition.CLIENTS -> ClientsFragment.newInstance(bundle)
-    BottomNavigationPosition.PROFILE -> ProfileFragment.newInstance(bundle)
+fun BottomNavigationPosition.createFragment(accountDetails: AccountDetails): Fragment = when (this) {
+    BottomNavigationPosition.LOGS -> LogsFragment.newInstance(accountDetails)
+    BottomNavigationPosition.LEAVES -> LeavesFragment.newInstance(accountDetails)
+    BottomNavigationPosition.CLIENTS -> ClientsFragment.newInstance(accountDetails)
+    BottomNavigationPosition.PROFILE -> ProfileFragment.newInstance(accountDetails)
 }
 
 fun BottomNavigationPosition.getTag(): String = when (this) {

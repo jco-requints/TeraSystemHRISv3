@@ -2,6 +2,7 @@ package com.example.terasystemhrisv3
 
 import android.content.Context
 import android.content.DialogInterface
+import android.content.Intent
 import android.net.ConnectivityManager
 import android.net.NetworkInfo
 import android.text.Editable
@@ -13,6 +14,8 @@ import android.widget.EditText
 import androidx.annotation.LayoutRes
 import androidx.appcompat.app.AlertDialog
 import android.widget.Button
+import androidx.core.content.ContextCompat.startActivity
+import com.example.terasystemhrisv3.ui.LoginActivity
 
 
 fun ViewGroup.inflate(@LayoutRes layoutRes: Int, attachToRoot: Boolean = false): View {
