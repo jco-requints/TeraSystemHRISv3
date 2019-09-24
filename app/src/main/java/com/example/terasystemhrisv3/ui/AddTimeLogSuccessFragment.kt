@@ -6,18 +6,25 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProviders
 import com.example.terasystemhrisv3.AppBarController
+import com.example.terasystemhrisv3.FragmentNavigator
 import com.example.terasystemhrisv3.R
 import com.example.terasystemhrisv3.model.AccountDetails
+import com.example.terasystemhrisv3.viewmodel.AddTimeLogSuccessViewModel
 import kotlinx.android.synthetic.main.fragment_addtimelogsuccess.view.*
 
 class AddTimeLogSuccessFragment : Fragment() {
 
     private var myInterface: AppBarController? = null
     private var myDetails: AccountDetails = AccountDetails("","","","","","","","")
+    private lateinit var addTimeLogSuccessViewModel: AddTimeLogSuccessViewModel
+    private var fragmentNavigatorInterface: FragmentNavigator? = null
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val bundle = this.arguments
+        addTimeLogSuccessViewModel = ViewModelProviders.of(this).get(AddTimeLogSuccessViewModel::class.java)
         var logType = 0
         var currentTime = ""
         if (bundle != null)
@@ -32,23 +39,21 @@ class AddTimeLogSuccessFragment : Fragment() {
         myInterface?.setCancelButtonTitle(null)
         myInterface?.getAddButton()?.visibility = View.GONE
         myInterface?.getCancelButton()?.visibility = View.GONE
-        when (logType) {
-            1 -> view.leaveType.text = getString(R.string.time_in_text)
-            2 -> view.leaveType.text = getString(R.string.break_out_text)
-            3 -> view.leaveType.text = getString(R.string.break_in_text)
-            else -> view.leaveType.text = getString(R.string.time_out_text)
-        }
+        addTimeLogSuccessViewModel.intLogType.value = logType
+
+        addTimeLogSuccessViewModel.intLogType.observe(viewLifecycleOwner, Observer {
+            addTimeLogSuccessViewModel.convertLogTypeToWord()
+        })
+
+        addTimeLogSuccessViewModel.wordLogType.observe(viewLifecycleOwner, Observer {
+            view.logType.text = it
+        })
+
         view.time.text = currentTime
         view.okBtn?.setOnClickListener {
             val mBundle = Bundle()
-            val fragmentManager = myInterface?.getSupportFragmentManager()
-            val fragment = LogsFragment()
             mBundle.putParcelable("keyAccountDetails", myDetails)
-            fragment.arguments = mBundle
-            val fragmentTransaction = fragmentManager?.beginTransaction()
-            fragmentTransaction?.replace(R.id.container, fragment)
-            fragmentTransaction?.addToBackStack(null)
-            fragmentTransaction?.commit()
+            fragmentNavigatorInterface?.showTimeLogs(mBundle, LogsFragment())
         }
 
         return view
@@ -60,6 +65,10 @@ class AddTimeLogSuccessFragment : Fragment() {
         if(context is AppBarController)
         {
             myInterface = context
+        }
+        if(context is FragmentNavigator)
+        {
+            fragmentNavigatorInterface = context
         }
     }
 

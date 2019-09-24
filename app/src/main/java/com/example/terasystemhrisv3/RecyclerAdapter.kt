@@ -53,22 +53,22 @@ class RecyclerAdapter(private val logs: ArrayList<Logs>) : RecyclerView.Adapter<
             if(logs.timeIn.isNullOrEmpty() ||logs.timeIn == "null")
             {
                 view.itemTimeIn.text = "N/A"
-                view.itemTimeIn.setTextColor(Color.parseColor("#FF0000"))
+                view.itemTimeIn.setTextColor(Color.RED)
             }
             else
             {
                 view.itemTimeIn.text = logs.timeIn
-                view.itemTimeIn.setTextColor(Color.parseColor("#FF000000"))
+                view.itemTimeIn.setTextColor(Color.BLACK)
             }
             if(logs.timeOut.isNullOrEmpty() || logs.timeOut == "null")
             {
                 view.itemTimeOut.text = "N/A"
-                view.itemTimeOut.setTextColor(Color.parseColor("#FF0000"))
+                view.itemTimeOut.setTextColor(Color.RED)
             }
             else
             {
                 view.itemTimeOut.text = logs.timeOut
-                view.itemTimeOut.setTextColor(Color.parseColor("#FF000000"))
+                view.itemTimeOut.setTextColor(Color.BLACK)
             }
         }
 

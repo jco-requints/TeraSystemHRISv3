@@ -16,6 +16,9 @@ import androidx.appcompat.app.AlertDialog
 import android.widget.Button
 import androidx.core.content.ContextCompat.startActivity
 import com.example.terasystemhrisv3.ui.LoginActivity
+import java.text.ParseException
+import java.text.SimpleDateFormat
+import java.util.*
 
 
 fun ViewGroup.inflate(@LayoutRes layoutRes: Int, attachToRoot: Boolean = false): View {
@@ -60,4 +63,34 @@ fun isConnected(context: Context): Boolean {
         }
   }
   return false
+}
+
+fun isFieldNullOrEmpty(string: String): Boolean {
+  return string.isEmpty() || string == "null"
+}
+
+fun convertDateToHumanDate(logDate: String): String {
+
+  val humanDateFormat = SimpleDateFormat("MMMM d")
+  try {
+    val parsedDateFormat = Date(logDate.toLong())
+    val cal = Calendar.getInstance()
+    cal.time = parsedDateFormat
+    return humanDateFormat.format(cal.time)
+  } catch (e: ParseException) {
+    e.printStackTrace()
+    return ""
+  }
+}
+
+fun convertTimeToStandardTime(logTime: String): String {
+  val militaryTime = SimpleDateFormat("hh:mm")
+  val standardizedTime = SimpleDateFormat("h:mm a")
+  try {
+    val convertedTime = militaryTime.parse(logTime)
+    return standardizedTime.format(convertedTime)
+  } catch (e: Exception) {
+    e.printStackTrace()
+    return ""
+  }
 }

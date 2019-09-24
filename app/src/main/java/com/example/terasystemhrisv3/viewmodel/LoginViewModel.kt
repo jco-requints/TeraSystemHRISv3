@@ -34,10 +34,10 @@ class LoginViewModel(application: Application) : AndroidViewModel(application), 
     }
 
     fun login(){
-        var reqParam = URLEncoder.encode("userID", "UTF-8") + "=" + URLEncoder.encode(username.value, "UTF-8")
-        reqParam += "&" + URLEncoder.encode("password", "UTF-8") + "=" + URLEncoder.encode(password.value, "UTF-8")
         if(isConnected(getApplication()))
         {
+            var reqParam = URLEncoder.encode("userID", "UTF-8") + "=" + URLEncoder.encode(username.value, "UTF-8")
+            reqParam += "&" + URLEncoder.encode("password", "UTF-8") + "=" + URLEncoder.encode(password.value, "UTF-8")
             WebServiceConnection(this).execute(URLs.URL_LOGIN, reqParam)
         }
         else

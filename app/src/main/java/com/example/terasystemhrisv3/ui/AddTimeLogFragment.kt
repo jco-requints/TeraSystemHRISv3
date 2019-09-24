@@ -2,9 +2,6 @@ package com.example.terasystemhrisv3.ui
 
 import android.content.Context
 import android.graphics.Color
-import android.net.ConnectivityManager
-import android.net.NetworkInfo
-import android.os.Build
 import android.os.Bundle
 import android.util.TypedValue
 import androidx.fragment.app.Fragment
@@ -14,30 +11,32 @@ import android.view.ViewGroup
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import android.widget.TextView
+import android.text.format.DateFormat
+import androidx.lifecycle.ViewModelProviders
+import androidx.lifecycle.Observer
 import com.example.terasystemhrisv3.AppBarController
 import com.example.terasystemhrisv3.FragmentNavigator
 import com.example.terasystemhrisv3.R
 import com.example.terasystemhrisv3.model.AccountDetails
-import com.example.terasystemhrisv3.services.NetworkRequestInterface
-import com.example.terasystemhrisv3.services.WebServiceConnection
+import com.example.terasystemhrisv3.viewmodel.AddTimeLogViewModel
 import kotlinx.android.synthetic.main.fragment_addtimelog.view.*
-import org.json.JSONObject
-import java.net.URL
-import java.time.LocalDateTime
-import java.time.format.DateTimeFormatter
+import java.util.*
 
-class AddTimeLogFragment : Fragment(), NetworkRequestInterface {
+class AddTimeLogFragment : Fragment() {
 
     private var myInterface: AppBarController? = null
     private var fragmentNavigatorInterface: FragmentNavigator? = null
+    private lateinit var addTimeLogViewModel: AddTimeLogViewModel
     private var myDetails: AccountDetails = AccountDetails("","","","","","","","")
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val bundle = this.arguments
+        addTimeLogViewModel = ViewModelProviders.of(this).get(AddTimeLogViewModel::class.java)
         if (bundle != null)
         {
             myDetails = bundle.getParcelable("keyAccountDetails")!!
         }
+        addTimeLogViewModel.accountDetails.value = myDetails
         val view = inflater.inflate(R.layout.fragment_addtimelog, container, false)
         myInterface?.setTitle(getString(R.string.addtimelog_title))
         myInterface?.setAddButtonTitle(getString(R.string.done_title))
@@ -60,28 +59,29 @@ class AddTimeLogFragment : Fragment(), NetworkRequestInterface {
             }
         }
 
-        myInterface?.getAddButton()?.setOnClickListener {
-//            view?.progressBarHolder?.visibility = View.VISIBLE
-            if (isConnected(container!!.context)) {
-                val mURL = URL("http://222.222.222.71:9080/MobileAppTraining/AppTrainingAddTimeLog.htm").toString()
-                val itemSelected = view.spinner.selectedItemPosition + 1
-                WebServiceConnection(this).execute(mURL, myDetails.username, itemSelected.toString())
-            }
-            else
-            {
-                view.popupHolder.visibility = View.GONE
-                view.network_status.text = getString(R.string.no_internet_message)
-            }
-        }
-
-        view.txtclose?.setOnClickListener {
-            view.popupHolder.visibility = View.GONE
-        }
-
         myInterface?.getCancelButton()?.setOnClickListener {
             val fragmentManager = myInterface?.getSupportFragmentManager()
             fragmentManager?.popBackStackImmediate()
         }
+
+        myInterface?.getAddButton()?.setOnClickListener {
+            addTimeLogViewModel.selectedItem.value = view.spinner.selectedItemPosition + 1
+            addTimeLogViewModel.addTimeLog()
+        }
+
+        addTimeLogViewModel.isAddTimeLogSuccesful.observe(viewLifecycleOwner, Observer {
+            if(it)
+            {
+                val mBundle = Bundle()
+                val current = Calendar.getInstance().time
+                val currentTime = DateFormat.format("h:mm a", current).toString()
+                mBundle.putInt("logType", addTimeLogViewModel.selectedItem.value!!)
+                mBundle.putString("currentTime", currentTime)
+                mBundle.putParcelable("keyAccountDetails", addTimeLogViewModel.accountDetails.value)
+                fragmentNavigatorInterface?.showAddTimeLogSuccess(mBundle, AddTimeLogSuccessFragment())
+            }
+        })
+
         return view
     }
 
@@ -98,77 +98,11 @@ class AddTimeLogFragment : Fragment(), NetworkRequestInterface {
         }
     }
 
-    override fun beforeNetworkCall() {
-        view?.progressBarHolder?.visibility = View.VISIBLE
-    }
-
-    override fun afterNetworkCall(result: String?) {
-        view?.progressBarHolder?.visibility = View.GONE
-        if(result == "Connection Timeout")
-        {
-            view?.popupHolder?.visibility = View.VISIBLE
-            view?.network_status?.text = getString(R.string.connection_timeout_message)
-        }
-        else if(result.isNullOrEmpty())
-        {
-            view?.popupHolder?.visibility = View.VISIBLE
-            view?.network_status?.text = getString(R.string.server_error)
-        }
-        else
-        {
-            val jsonObject = JSONObject(result)
-            val status = jsonObject?.get("status").toString()
-            if(status == "0")
-            {
-                val itemSelected = view?.spinner?.selectedItemPosition?.plus(1)
-                val mBundle = Bundle()
-                val current = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                    LocalDateTime.now()
-                } else {
-                    TODO("VERSION.SDK_INT < O")
-                }
-                val formatter = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                    DateTimeFormatter.ofPattern("h:mm a")
-                } else {
-                    TODO("VERSION.SDK_INT < O")
-                }
-                val formatted = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                    current.format(formatter)
-                } else {
-                    TODO("VERSION.SDK_INT < O")
-                }
-                mBundle.putInt("logType", itemSelected!!)
-                mBundle.putString("currentTime", formatted)
-                mBundle.putParcelable("keyAccountDetails", myDetails)
-                fragmentNavigatorInterface?.showAddTimeLogSuccess(mBundle, AddTimeLogSuccessFragment())
-            }
-            else
-            {
-                view?.popupHolder?.visibility = View.VISIBLE
-                view?.network_status?.text = getString(R.string.logs_update_error_message)
-            }
-        }
-    }
-
     companion object {
         val TAG: String = AddTimeLogFragment::class.java.simpleName
         fun newInstance(bundle: Bundle) = AddTimeLogFragment().apply {
             this.arguments = bundle
         }
-    }
-
-    fun isConnected(context: Context): Boolean {
-        val connectivity = context.getSystemService(
-            Context.CONNECTIVITY_SERVICE) as ConnectivityManager
-        if (connectivity != null) {
-            val info = connectivity.allNetworkInfo
-            if (info != null)
-                for (i in info)
-                    if (i.state == NetworkInfo.State.CONNECTED) {
-                        return true
-                    }
-        }
-        return false
     }
 
 }

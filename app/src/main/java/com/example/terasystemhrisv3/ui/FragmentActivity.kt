@@ -83,7 +83,6 @@ class FragmentActivity : AppCompatActivity(), AppBarController, FragmentNavigato
         initFragment(savedInstanceState)
     }
 
-
     private fun initFragment(savedInstanceState: Bundle?) {
         savedInstanceState ?: switchFragment(BottomNavigationPosition.LOGS)
     }
@@ -184,6 +183,10 @@ class FragmentActivity : AppCompatActivity(), AppBarController, FragmentNavigato
     }
 
     override fun showFileLeaveSuccess(mBundle: Bundle, fragment: Fragment) {
+        replaceFragment(mBundle, fragment)
+    }
+
+    override fun showTimeLogs(mBundle: Bundle, fragment: Fragment) {
         replaceFragment(mBundle, fragment)
     }
 
