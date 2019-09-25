@@ -13,7 +13,7 @@ import java.util.ArrayList
 
 class LogsViewModel(application: Application) : AndroidViewModel(application), NetworkRequestInterface {
 
-    var webServiceError = MutableLiveData<String>()
+    var webServiceError = SingleLiveEvent<String>()
     var accountDetails = MutableLiveData<AccountDetails>()
     var logs = MutableLiveData<Logs>()
     lateinit var logsHolder: Logs

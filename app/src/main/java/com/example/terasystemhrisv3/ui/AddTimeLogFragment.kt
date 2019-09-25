@@ -17,6 +17,7 @@ import androidx.lifecycle.Observer
 import com.example.terasystemhrisv3.AppBarController
 import com.example.terasystemhrisv3.FragmentNavigator
 import com.example.terasystemhrisv3.R
+import com.example.terasystemhrisv3.alertDialog
 import com.example.terasystemhrisv3.model.AccountDetails
 import com.example.terasystemhrisv3.viewmodel.AddTimeLogViewModel
 import kotlinx.android.synthetic.main.fragment_addtimelog.view.*
@@ -68,6 +69,15 @@ class AddTimeLogFragment : Fragment() {
             addTimeLogViewModel.selectedItem.value = view.spinner.selectedItemPosition + 1
             addTimeLogViewModel.addTimeLog()
         }
+
+        addTimeLogViewModel.showProgressbar.observe(viewLifecycleOwner, Observer {
+            view.progressBarHolder.visibility = if (it) View.VISIBLE
+            else View.GONE
+        })
+
+        addTimeLogViewModel.webServiceError.observe(viewLifecycleOwner, Observer { message ->
+            this.context?.let { mContext -> alertDialog(mContext, message) }
+        })
 
         addTimeLogViewModel.isAddTimeLogSuccesful.observe(viewLifecycleOwner, Observer {
             if(it)

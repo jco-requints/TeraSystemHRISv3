@@ -59,15 +59,13 @@ class LogsFragment : Fragment(){
             }
         })
 
+        logsViewModel.accountDetails.value = myDetails
+
+        logsViewModel.getTimeLogs()
+
         logsViewModel.showProgressbar.observe(viewLifecycleOwner, Observer {
             view.logsProgressBarHolder.visibility = if (it) View.VISIBLE
             else View.GONE
-        })
-
-        logsViewModel.accountDetails.value = myDetails
-
-        logsViewModel.accountDetails.observe(viewLifecycleOwner, Observer {
-            logsViewModel.getTimeLogs()
         })
 
         logsViewModel.logsList.observe(viewLifecycleOwner, Observer {
