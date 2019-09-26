@@ -2,11 +2,11 @@ package com.example.terasystemhrisv3.viewmodel
 
 import android.app.Application
 import androidx.lifecycle.*
-import com.example.terasystemhrisv3.*
 import com.example.terasystemhrisv3.model.AccountDetails
 import com.example.terasystemhrisv3.model.Logs
-import com.example.terasystemhrisv3.services.WebServiceConnection
-import com.example.terasystemhrisv3.services.NetworkRequestInterface
+import com.example.terasystemhrisv3.service.WebServiceConnection
+import com.example.terasystemhrisv3.interfaces.NetworkRequestInterface
+import com.example.terasystemhrisv3.util.*
 import org.json.JSONObject
 import java.net.URLEncoder
 import java.util.ArrayList
@@ -44,6 +44,7 @@ class LogsViewModel(application: Application) : AndroidViewModel(application), N
     }
 
     override fun beforeNetworkCall() {
+        logsList.value?.clear()
         showProgressbar.value = true
     }
 

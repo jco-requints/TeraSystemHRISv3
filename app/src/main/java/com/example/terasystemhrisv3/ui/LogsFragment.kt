@@ -11,7 +11,12 @@ import androidx.lifecycle.ViewModelProviders
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.terasystemhrisv3.*
+import com.example.terasystemhrisv3.adapter.RecyclerAdapter
 import com.example.terasystemhrisv3.model.AccountDetails
+import com.example.terasystemhrisv3.interfaces.AppBarController
+import com.example.terasystemhrisv3.interfaces.FragmentNavigator
+import com.example.terasystemhrisv3.util.URLs
+import com.example.terasystemhrisv3.util.alertDialog
 import com.example.terasystemhrisv3.viewmodel.LogsViewModel
 import kotlinx.android.synthetic.main.fragment_logs.view.*
 import kotlinx.android.synthetic.main.fragment_logs.view.logsProgressBarHolder
@@ -68,8 +73,8 @@ class LogsFragment : Fragment(){
             else View.GONE
         })
 
+        view?.recyclerView?.layoutManager = linearLayoutManager
         logsViewModel.logsList.observe(viewLifecycleOwner, Observer {
-            view?.recyclerView?.layoutManager = linearLayoutManager
             adapter = RecyclerAdapter(it)
             view?.recyclerView?.adapter = adapter
         })
@@ -81,7 +86,7 @@ class LogsFragment : Fragment(){
         return view
     }
 
-    override fun onAttach(context: Context?) {
+    override fun onAttach(context: Context) {
         super.onAttach(context)
 
         if(context is AppBarController)

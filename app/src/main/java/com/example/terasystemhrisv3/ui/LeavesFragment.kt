@@ -11,17 +11,18 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.example.terasystemhrisv3.AppBarController
-import com.example.terasystemhrisv3.FragmentNavigator
-import com.example.terasystemhrisv3.LeavesRecyclerAdapter
-import com.example.terasystemhrisv3.R
+import com.example.terasystemhrisv3.*
+import com.example.terasystemhrisv3.adapter.LeavesRecyclerAdapter
 import com.example.terasystemhrisv3.model.AccountDetails
 import com.example.terasystemhrisv3.model.Leaves
-import com.example.terasystemhrisv3.services.NetworkRequestInterface
-import com.example.terasystemhrisv3.services.WebServiceConnection
+import com.example.terasystemhrisv3.interfaces.NetworkRequestInterface
+import com.example.terasystemhrisv3.service.WebServiceConnection
+import com.example.terasystemhrisv3.interfaces.AppBarController
+import com.example.terasystemhrisv3.interfaces.FragmentNavigator
+import com.example.terasystemhrisv3.util.URLs
 import kotlinx.android.synthetic.main.fragment_leaves.view.*
 import org.json.JSONObject
-import java.net.URL
+import java.net.URLEncoder
 import java.text.ParseException
 import java.text.SimpleDateFormat
 import java.util.*
@@ -46,7 +47,6 @@ class LeavesFragment : Fragment(), NetworkRequestInterface {
             myDetails = bundle.getParcelable("keyAccountDetails")!!
         }
         val view = inflater.inflate(R.layout.fragment_leaves, container, false)
-        val mURL = URL("http://222.222.222.71:9080/MobileAppTraining/AppTrainingGetLeaves.htm").toString()
         myInterface?.setTitle(getString(R.string.leaves_title))
         myInterface?.setAddButtonTitle("+")
         myInterface?.setCancelButtonTitle(null)
@@ -55,14 +55,9 @@ class LeavesFragment : Fragment(), NetworkRequestInterface {
         myInterface?.getCancelButton()?.visibility = View.GONE
 
         if (isConnected(container!!.context)) {
-            WebServiceConnection(this).execute(mURL, myDetails?.username)
+            val reqParam = URLEncoder.encode("userID", "UTF-8") + "=" + URLEncoder.encode(myDetails.username, "UTF-8")
+            WebServiceConnection(this).execute(URLs.URL_GET_LEAVES, reqParam)
         }
-        else
-        {
-            view.popupHolder.visibility = View.VISIBLE
-            view.network_status.text = getString(R.string.no_internet_message)
-        }
-
         //Logic for + button
         myInterface?.getAddButton()?.setOnClickListener {
             val mBundle = Bundle()
@@ -70,14 +65,10 @@ class LeavesFragment : Fragment(), NetworkRequestInterface {
             fragmentNavigatorInterface?.showFileLeave(mBundle, FileLeaveFragment())
         }
 
-        view.txtclose?.setOnClickListener {
-            view.popupHolder.visibility = View.GONE
-        }
-
         return view
     }
 
-    override fun onAttach(context: Context?) {
+    override fun onAttach(context: Context) {
         super.onAttach(context)
 
         if(context is AppBarController)
@@ -98,13 +89,11 @@ class LeavesFragment : Fragment(), NetworkRequestInterface {
         view?.leavesProgressBarHolder?.visibility = View.GONE
         if(result == "Connection Timeout")
         {
-            view?.popupHolder?.visibility = View.VISIBLE
-            view?.network_status?.text = getString(R.string.connection_timeout_message)
+
         }
         else if(result.isNullOrEmpty())
         {
-            view?.popupHolder?.visibility = View.VISIBLE
-            view?.network_status?.text = getString(R.string.server_error)
+
         }
         else
         {
@@ -133,17 +122,12 @@ class LeavesFragment : Fragment(), NetworkRequestInterface {
                     }
                     leaves.add(leavesList)
                 }
-
-                view?.vacationLeave?.text = trimTrailingZero(remVL.toString())
-                view?.sickLeave?.text = trimTrailingZero(remSL.toString())
                 linearLayoutManager = LinearLayoutManager(this.context)
                 view?.leavesRecyclerView?.layoutManager = linearLayoutManager
-                adapter = LeavesRecyclerAdapter(leaves)
+                adapter = LeavesRecyclerAdapter(leaves, remSL, remVL)
                 view?.leavesRecyclerView?.adapter = adapter
-                view?.leavesRecyclerView?.isNestedScrollingEnabled = false
             } else {
-                view?.popupHolder?.visibility = View.VISIBLE
-                view?.network_status?.text = getString(R.string.logs_error_message)
+
             }
         }
     }

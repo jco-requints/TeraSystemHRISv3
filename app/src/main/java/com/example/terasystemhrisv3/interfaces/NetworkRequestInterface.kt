@@ -1,4 +1,4 @@
-package com.example.terasystemhrisv3.services
+package com.example.terasystemhrisv3.interfaces
 
 interface NetworkRequestInterface
 {

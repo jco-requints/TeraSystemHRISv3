@@ -10,7 +10,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
-import com.example.terasystemhrisv3.AppBarController
+import com.example.terasystemhrisv3.interfaces.AppBarController
 import com.example.terasystemhrisv3.R
 import com.example.terasystemhrisv3.model.Logs
 import com.example.terasystemhrisv3.viewmodel.LogDetailsViewModel
@@ -82,7 +82,7 @@ class LogDetailsFragment : Fragment() {
         return view
     }
 
-    override fun onAttach(context: Context?) {
+    override fun onAttach(context: Context) {
         super.onAttach(context)
 
         if(context is AppBarController)

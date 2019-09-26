@@ -10,8 +10,8 @@ import android.widget.Toast
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import com.example.terasystemhrisv3.R
-import com.example.terasystemhrisv3.afterTextChanged
-import com.example.terasystemhrisv3.alertDialog
+import com.example.terasystemhrisv3.util.afterTextChanged
+import com.example.terasystemhrisv3.util.alertDialog
 import com.example.terasystemhrisv3.viewmodel.LoginViewModel
 import kotlinx.android.synthetic.main.activity_login.*
 

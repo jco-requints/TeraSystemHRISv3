@@ -2,7 +2,7 @@ package com.example.terasystemhrisv3.viewmodel
 
 import android.app.Application
 import androidx.lifecycle.*
-import com.example.terasystemhrisv3.isFieldNullOrEmpty
+import com.example.terasystemhrisv3.util.isFieldNullOrEmpty
 import com.example.terasystemhrisv3.model.AccountDetails
 import java.util.*
 

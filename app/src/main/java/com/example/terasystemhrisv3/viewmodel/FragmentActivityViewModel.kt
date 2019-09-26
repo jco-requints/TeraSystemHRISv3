@@ -7,8 +7,6 @@ import androidx.appcompat.app.AlertDialog
 import androidx.lifecycle.*
 import com.example.terasystemhrisv3.helper.BottomNavigationPosition
 import com.example.terasystemhrisv3.model.AccountDetails
-import com.example.terasystemhrisv3.services.NetworkRequestInterface
-import org.json.JSONObject
 
 
 class FragmentActivityViewModel(application: Application) : AndroidViewModel(application) {

@@ -1,4 +1,4 @@
-package com.example.terasystemhrisv3
+package com.example.terasystemhrisv3.interfaces
 
 import android.os.Bundle
 import androidx.fragment.app.Fragment

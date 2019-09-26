@@ -1,4 +1,4 @@
-package com.example.terasystemhrisv3
+package com.example.terasystemhrisv3.adapter
 
 import android.graphics.Color
 import android.os.Bundle
@@ -6,6 +6,8 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.RecyclerView
+import com.example.terasystemhrisv3.R
+import com.example.terasystemhrisv3.util.inflate
 import com.example.terasystemhrisv3.model.Logs
 import com.example.terasystemhrisv3.ui.FragmentActivity
 import com.example.terasystemhrisv3.ui.LogDetailsFragment

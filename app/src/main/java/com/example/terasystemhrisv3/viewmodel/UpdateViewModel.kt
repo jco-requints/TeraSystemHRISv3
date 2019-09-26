@@ -2,11 +2,11 @@ package com.example.terasystemhrisv3.viewmodel
 
 import android.app.Application
 import androidx.lifecycle.*
-import com.example.terasystemhrisv3.URLs
-import com.example.terasystemhrisv3.isConnected
+import com.example.terasystemhrisv3.util.URLs
+import com.example.terasystemhrisv3.util.isConnected
 import com.example.terasystemhrisv3.model.AccountDetails
-import com.example.terasystemhrisv3.services.NetworkRequestInterface
-import com.example.terasystemhrisv3.services.WebServiceConnection
+import com.example.terasystemhrisv3.interfaces.NetworkRequestInterface
+import com.example.terasystemhrisv3.service.WebServiceConnection
 import org.json.JSONObject
 import java.net.URLEncoder
 import android.util.Patterns.EMAIL_ADDRESS
@@ -126,7 +126,7 @@ class UpdateViewModel(application: Application) : AndroidViewModel(application),
         accountDetails.value?.middleName = middleName.value
         accountDetails.value!!.lastName = lastName.value.toString()
         accountDetails.value!!.emailAddress = emailAddress.value.toString()
-        accountDetails.value!!.mobileNumber = mobileNumber.value.toString() // Causes mobile number upon update to be empty
+        accountDetails.value!!.mobileNumber = mobileNumber.value!!.replace(" ", "") // Causes mobile number upon update to be empty
         accountDetails.value?.landlineNumber = landline.value
     }
 
@@ -172,5 +172,4 @@ class UpdateViewModel(application: Application) : AndroidViewModel(application),
             isUpdateSuccessful.value = false
         }
     }
-
 }

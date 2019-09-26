@@ -1,16 +1,8 @@
 package com.example.terasystemhrisv3.viewmodel
 
 import android.app.Application
-import android.graphics.Color
 import androidx.lifecycle.*
-import com.example.terasystemhrisv3.*
-import com.example.terasystemhrisv3.model.AccountDetails
-import com.example.terasystemhrisv3.model.Logs
-import com.example.terasystemhrisv3.services.WebServiceConnection
-import com.example.terasystemhrisv3.services.NetworkRequestInterface
-import org.json.JSONObject
-import java.net.URLEncoder
-import java.util.ArrayList
+import com.example.terasystemhrisv3.util.isFieldNullOrEmpty
 
 class LogDetailsViewModel(application: Application) : AndroidViewModel(application) {
 

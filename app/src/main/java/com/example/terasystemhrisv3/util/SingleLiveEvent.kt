@@ -1,4 +1,4 @@
-package com.example.terasystemhrisv3
+package com.example.terasystemhrisv3.util
 
 import android.util.Log
 import androidx.annotation.MainThread

@@ -8,8 +8,8 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
-import com.example.terasystemhrisv3.AppBarController
-import com.example.terasystemhrisv3.FragmentNavigator
+import com.example.terasystemhrisv3.interfaces.AppBarController
+import com.example.terasystemhrisv3.interfaces.FragmentNavigator
 import com.example.terasystemhrisv3.R
 import com.example.terasystemhrisv3.model.AccountDetails
 import com.example.terasystemhrisv3.viewmodel.AddTimeLogSuccessViewModel
@@ -59,7 +59,7 @@ class AddTimeLogSuccessFragment : Fragment() {
         return view
     }
 
-    override fun onAttach(context: Context?) {
+    override fun onAttach(context: Context) {
         super.onAttach(context)
 
         if(context is AppBarController)

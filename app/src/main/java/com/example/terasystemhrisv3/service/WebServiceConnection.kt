@@ -1,7 +1,8 @@
-package com.example.terasystemhrisv3.services
+package com.example.terasystemhrisv3.service
 
 import android.annotation.SuppressLint
 import android.os.AsyncTask
+import com.example.terasystemhrisv3.interfaces.NetworkRequestInterface
 import java.io.BufferedReader
 import java.io.InputStreamReader
 import java.io.OutputStreamWriter

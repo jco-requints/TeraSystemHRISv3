@@ -6,16 +6,14 @@ import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.telephony.PhoneNumberFormattingTextWatcher
-import android.text.Editable
-import android.text.TextWatcher
 import android.view.KeyEvent
 import android.view.View
 import android.view.inputmethod.InputMethodManager
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import com.example.terasystemhrisv3.R
-import com.example.terasystemhrisv3.afterTextChanged
-import com.example.terasystemhrisv3.alertDialog
+import com.example.terasystemhrisv3.util.afterTextChanged
+import com.example.terasystemhrisv3.util.alertDialog
 import com.example.terasystemhrisv3.model.AccountDetails
 import com.example.terasystemhrisv3.viewmodel.UpdateViewModel
 import kotlinx.android.synthetic.main.activity_update.*
@@ -54,11 +52,8 @@ class Update : AppCompatActivity() {
             email_edit.setText(userDetails.emailAddress)
             updateViewModel.emailAddress.value = userDetails.emailAddress
             updateViewModel.addSpace(userDetails.mobileNumber)
+            mobile_edit.setText(updateViewModel.mobileNumber.value)
             landline_edit.setText(userDetails.landlineNumber)
-        })
-
-        updateViewModel.mobileNumber.observe(this, Observer {
-            mobile_edit.setText(it)
         })
 
         firstname_edit.afterTextChanged {
@@ -77,10 +72,14 @@ class Update : AppCompatActivity() {
             updateViewModel.emailAddress.value = it
         }
 
-//        mobile_edit.afterTextChanged {
-//            updateViewModel.mobileNumber.value = it
-//        }
-//
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            updateViewModel.mobileNumber.value = mobile_edit.addTextChangedListener(PhoneNumberFormattingTextWatcher()).toString()
+        }
+
+        mobile_edit.afterTextChanged {
+            updateViewModel.mobileNumber.value = it
+        }
+
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             updateViewModel.landline.value = landline_edit.addTextChangedListener(PhoneNumberFormattingTextWatcher()).toString()
         }
@@ -88,59 +87,6 @@ class Update : AppCompatActivity() {
         landline_edit.afterTextChanged {
             updateViewModel.landline.value = it
         }
-
-        val username_string = accountDetails.username
-        mobile_edit.addTextChangedListener(object : TextWatcher {
-
-            var ignoreChange = false
-
-            override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {
-                if (!ignoreChange) {
-                    var string = s.toString()
-                    val mobilePrefixOneFirstCase = "^(09)\\d{2}\$".toRegex()
-                    val mobilePrefixOneSecondCase = "^(\\+63)\$".toRegex()
-                    val mobilePrefixTwoFirstCase = "^(09)\\d{2} \\d{3}\$".toRegex()
-                    val mobilePrefixTwoSecondCase = "^(\\+63) \\d{3}\$".toRegex()
-                    val mobilePrefixThreeSecondCase = "^(\\+63) \\d{3} \\d{3}\$".toRegex()
-                    if (string.matches(mobilePrefixOneFirstCase)) {
-                        string += " "
-                    } else if (string.matches(mobilePrefixOneSecondCase)) {
-                        string += " "
-                    }
-                    if (string.matches(mobilePrefixTwoFirstCase)) {
-                        string += " "
-                    } else if (string.matches(mobilePrefixTwoSecondCase)) {
-                        string += " "
-                    }
-                    if (string.matches(mobilePrefixThreeSecondCase)) {
-                        string += " "
-                    }
-                    ignoreChange = true
-                    mobile_edit.setText(string)
-                    mobile_edit.setSelection(mobile_edit.text.length)
-                    ignoreChange = false
-                }
-            }
-
-            override fun beforeTextChanged(s: CharSequence, start: Int, count: Int, after: Int) {
-
-            }
-
-            override fun afterTextChanged(s: Editable) {
-                val string = s.toString()
-                val mobilePrefixOneFirstCase = "^(09)\\d{2}\$".toRegex()
-                val mobilePrefixOneSecondCase = "^(\\+63)\$".toRegex()
-                val mobilePrefixTwoFirstCase = "^(09)\\d{2} \\d{3}\$".toRegex()
-                val mobilePrefixTwoSecondCase = "^(\\+63) \\d{3}\$".toRegex()
-                val mobilePrefixThreeSecondCase = "^(\\+63) \\d{3} \\d{3}\$".toRegex()
-                ignoreChange =
-                    string.matches(mobilePrefixOneFirstCase) || string.matches(mobilePrefixOneSecondCase)
-                            || string.matches(mobilePrefixTwoFirstCase) || string.matches(
-                        mobilePrefixTwoSecondCase
-                    )
-                            || string.matches(mobilePrefixThreeSecondCase)
-            }
-        })
 
         update_profile_button.setOnClickListener {
             updateViewModel.checkForEmptyFields()

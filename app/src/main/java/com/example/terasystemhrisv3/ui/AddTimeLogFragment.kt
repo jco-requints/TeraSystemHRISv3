@@ -14,10 +14,10 @@ import android.widget.TextView
 import android.text.format.DateFormat
 import androidx.lifecycle.ViewModelProviders
 import androidx.lifecycle.Observer
-import com.example.terasystemhrisv3.AppBarController
-import com.example.terasystemhrisv3.FragmentNavigator
+import com.example.terasystemhrisv3.interfaces.AppBarController
+import com.example.terasystemhrisv3.interfaces.FragmentNavigator
 import com.example.terasystemhrisv3.R
-import com.example.terasystemhrisv3.alertDialog
+import com.example.terasystemhrisv3.util.alertDialog
 import com.example.terasystemhrisv3.model.AccountDetails
 import com.example.terasystemhrisv3.viewmodel.AddTimeLogViewModel
 import kotlinx.android.synthetic.main.fragment_addtimelog.view.*
@@ -95,7 +95,7 @@ class AddTimeLogFragment : Fragment() {
         return view
     }
 
-    override fun onAttach(context: Context?) {
+    override fun onAttach(context: Context) {
         super.onAttach(context)
 
         if(context is AppBarController)

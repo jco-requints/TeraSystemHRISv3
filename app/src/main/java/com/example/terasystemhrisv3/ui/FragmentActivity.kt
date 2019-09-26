@@ -11,8 +11,8 @@ import kotlinx.android.synthetic.main.fragment_main.*
 import android.content.Intent
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
-import com.example.terasystemhrisv3.AppBarController
-import com.example.terasystemhrisv3.FragmentNavigator
+import com.example.terasystemhrisv3.interfaces.AppBarController
+import com.example.terasystemhrisv3.interfaces.FragmentNavigator
 import com.example.terasystemhrisv3.R
 import com.example.terasystemhrisv3.extension.active
 import com.example.terasystemhrisv3.extension.attach

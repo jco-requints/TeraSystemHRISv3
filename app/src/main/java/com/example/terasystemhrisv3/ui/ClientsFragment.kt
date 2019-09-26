@@ -6,7 +6,7 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import com.example.terasystemhrisv3.AppBarController
+import com.example.terasystemhrisv3.interfaces.AppBarController
 import com.example.terasystemhrisv3.R
 import com.example.terasystemhrisv3.model.AccountDetails
 
@@ -23,7 +23,7 @@ class ClientsFragment : Fragment() {
         return view
     }
 
-    override fun onAttach(context: Context?) {
+    override fun onAttach(context: Context) {
         super.onAttach(context)
 
         if(context is AppBarController)

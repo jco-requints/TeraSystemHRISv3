@@ -1,4 +1,4 @@
-package com.example.terasystemhrisv3
+package com.example.terasystemhrisv3.interfaces
 
 import android.widget.Button
 import androidx.appcompat.widget.Toolbar

@@ -15,12 +15,12 @@ import android.view.ViewGroup
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import android.widget.TextView
-import com.example.terasystemhrisv3.AppBarController
-import com.example.terasystemhrisv3.FragmentNavigator
+import com.example.terasystemhrisv3.interfaces.AppBarController
+import com.example.terasystemhrisv3.interfaces.FragmentNavigator
 import com.example.terasystemhrisv3.R
 import com.example.terasystemhrisv3.model.AccountDetails
-import com.example.terasystemhrisv3.services.NetworkRequestInterface
-import com.example.terasystemhrisv3.services.WebServiceConnection
+import com.example.terasystemhrisv3.interfaces.NetworkRequestInterface
+import com.example.terasystemhrisv3.service.WebServiceConnection
 import kotlinx.android.synthetic.main.fragment_fileleave.view.network_status
 import kotlinx.android.synthetic.main.fragment_fileleave.view.popupHolder
 import kotlinx.android.synthetic.main.fragment_fileleave.view.spinner
@@ -208,7 +208,7 @@ class FileLeaveFragment : Fragment(), NetworkRequestInterface {
         return view
     }
 
-    override fun onAttach(context: Context?) {
+    override fun onAttach(context: Context) {
         super.onAttach(context)
 
         if(context is AppBarController)

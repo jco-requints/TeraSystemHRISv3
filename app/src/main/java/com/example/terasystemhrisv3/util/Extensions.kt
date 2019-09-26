@@ -1,4 +1,4 @@
-package com.example.terasystemhrisv3
+package com.example.terasystemhrisv3.util
 
 import android.annotation.SuppressLint
 import android.content.Context
