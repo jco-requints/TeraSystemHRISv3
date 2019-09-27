@@ -10,13 +10,9 @@ class AddTimeLogSuccessViewModel(application: Application) : AndroidViewModel(ap
     var intLogType = MutableLiveData<Int>()
     var wordLogType = MutableLiveData<String>()
     var accountDetails = MutableLiveData<AccountDetails>()
-    var showProgressbar = MutableLiveData<Boolean>()
-    var selectedItem = MutableLiveData<Int>()
-    var isAddTimeLogSuccesful = MutableLiveData<Boolean>()
 
     init {
-        isAddTimeLogSuccesful.value = false
-        showProgressbar.value = false
+
     }
 
     fun convertLogTypeToWord() {

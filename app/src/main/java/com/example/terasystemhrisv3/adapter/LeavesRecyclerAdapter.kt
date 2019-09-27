@@ -8,7 +8,7 @@ import com.example.terasystemhrisv3.ui.LeavesListViewHolder
 import com.example.terasystemhrisv3.R
 import com.example.terasystemhrisv3.model.Leaves
 
-class LeavesRecyclerAdapter(private var leavesList: ArrayList<Leaves>, private var remSL: Double, private var remVL: Double) : RecyclerView.Adapter<RecyclerView.ViewHolder>()  {
+class LeavesRecyclerAdapter(private var leavesList: ArrayList<Leaves>, private var remSL: Double, private var remVL: Double, private var showRemSLAndRemVL: Boolean) : RecyclerView.Adapter<RecyclerView.ViewHolder>()  {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         return when (viewType) {
@@ -24,7 +24,7 @@ class LeavesRecyclerAdapter(private var leavesList: ArrayList<Leaves>, private v
         when (getItemViewType(position)) {
             CellType.HEADER.ordinal -> {
                 val headerViewHolder = holder as HeaderViewHolder
-                headerViewHolder.bindLeaves(remSL, remVL)
+                headerViewHolder.bindLeaves(remSL, remVL, showRemSLAndRemVL)
             }
             CellType.CONTENT.ordinal -> {
                 val headerViewHolder = holder as LeavesListViewHolder

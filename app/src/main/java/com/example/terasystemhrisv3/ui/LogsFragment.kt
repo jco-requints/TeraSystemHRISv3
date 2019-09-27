@@ -15,12 +15,10 @@ import com.example.terasystemhrisv3.adapter.RecyclerAdapter
 import com.example.terasystemhrisv3.model.AccountDetails
 import com.example.terasystemhrisv3.interfaces.AppBarController
 import com.example.terasystemhrisv3.interfaces.FragmentNavigator
-import com.example.terasystemhrisv3.util.URLs
 import com.example.terasystemhrisv3.util.alertDialog
 import com.example.terasystemhrisv3.viewmodel.LogsViewModel
 import kotlinx.android.synthetic.main.fragment_logs.view.*
 import kotlinx.android.synthetic.main.fragment_logs.view.logsProgressBarHolder
-import java.net.URL
 
 class LogsFragment : Fragment(){
 
@@ -35,13 +33,11 @@ class LogsFragment : Fragment(){
         val bundle = this.arguments
         logsViewModel = ViewModelProviders.of(this).get(LogsViewModel::class.java)
         linearLayoutManager = LinearLayoutManager(this.context)
-
         if (bundle != null)
         {
             myDetails = bundle.getParcelable("keyAccountDetails")!!
         }
         val view = inflater.inflate(R.layout.fragment_logs, container, false)
-        val mURL = URL(URLs.URL_GET_TIME_LOGS).toString()
         myInterface?.setTitle(getString(R.string.logs_title))
         myInterface?.setAddButtonTitle("+")
         myInterface?.setCancelButtonTitle(null)

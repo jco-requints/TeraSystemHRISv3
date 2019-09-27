@@ -17,15 +17,9 @@
     <string name="mobile_label_text">Mobile Number</string>
     <string name="profile_mobile_text">09176554356</string>
     <string name="update_button_text">Update</string>
-    <!--<string name="update_profile_id_text">2019015</string>-->
     <string name="update_firstname_label_text">First Name</string>
-    <!--<string name="update_profile_firstname_text">Jericho Isaac</string>-->
     <string name="update_middlename_label_text">Middle Name</string>
-    <!--<string name="update_profile_middlename_text">Requintina</string>-->
     <string name="update_lastname_label_text">Last Name</string>
-    <!--<string name="update_profile_email_text">""</string>-->
-    <!--<string name="update_profile_mobile_text">""</string>-->
-    <!--<string name="update_profile_landline_text">""</string>-->
     <string name="update_landline_label_text">Landline</string>
     <string name="success_title">Success</string>
     <string name="success_message_text">You have successfully update your profile!</string>

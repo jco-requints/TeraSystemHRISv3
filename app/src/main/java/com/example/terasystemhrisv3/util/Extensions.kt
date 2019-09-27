@@ -64,16 +64,20 @@ fun isFieldNullOrEmpty(string: String): Boolean {
 }
 
 @SuppressLint("SimpleDateFormat")
-fun convertDateToHumanDate(logDate: String): String {
+fun convertDateToHumanDate(date: String): String {
   val humanDateFormat = SimpleDateFormat("MMMM d")
-  return try {
-    val parsedDateFormat = Date(logDate.toLong())
-    val cal = Calendar.getInstance()
-    cal.time = parsedDateFormat
-    humanDateFormat.format(cal.time)
+  val cal = Calendar.getInstance()
+  try {
+    if(!isFieldNullOrEmpty(date))
+    {
+      val parsedDateFormat = Date(date.toLong())
+      cal.time = parsedDateFormat
+      return humanDateFormat.format(cal.time)
+    }
+    return ""
   } catch (e: ParseException) {
     e.printStackTrace()
-    ""
+    return ""
   }
 }
 

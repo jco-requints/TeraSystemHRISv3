@@ -35,6 +35,8 @@ class LogsViewModel(application: Application) : AndroidViewModel(application), N
         }
         else
         {
+            logsList.value?.clear()
+            logsListHolder.clear()
             webServiceError.value = "No Internet Connection"
         }
     }
@@ -45,6 +47,7 @@ class LogsViewModel(application: Application) : AndroidViewModel(application), N
 
     override fun beforeNetworkCall() {
         logsList.value?.clear()
+        logsListHolder.clear()
         showProgressbar.value = true
     }
 
@@ -55,7 +58,6 @@ class LogsViewModel(application: Application) : AndroidViewModel(application), N
             val status = jsonObject.get("status").toString()
             if(status == "0")
             {
-                logsListHolder.clear()
                 val jsonArray = jsonObject.getJSONArray("timeLogs")
                 for (i in 0 until jsonArray.length()) {
                     logsHolder = Logs("","","","","","")
