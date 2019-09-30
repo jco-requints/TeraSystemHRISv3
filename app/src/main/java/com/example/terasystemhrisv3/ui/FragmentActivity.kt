@@ -25,7 +25,6 @@ import com.example.terasystemhrisv3.model.AccountDetails
 import com.example.terasystemhrisv3.viewmodel.FragmentActivityViewModel
 import com.google.android.material.bottomnavigation.BottomNavigationView
 
-
 class FragmentActivity : AppCompatActivity(), AppBarController, FragmentNavigator {
 
     private var navPosition: BottomNavigationPosition = BottomNavigationPosition.LOGS
@@ -94,13 +93,6 @@ class FragmentActivity : AppCompatActivity(), AppBarController, FragmentNavigato
             supportFragmentManager.attach(it, navPosition.getTag()) // Extension function
             supportFragmentManager.executePendingTransactions()
         }
-    }
-
-    fun switchContent(id: Int, fragment: Fragment) {
-        val ft = supportFragmentManager.beginTransaction().setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE)
-        ft.replace(id, fragment, fragment.toString())
-        ft.addToBackStack(null)
-        ft.commit()
     }
 
     private fun findFragment(position: BottomNavigationPosition): Fragment {
