@@ -50,7 +50,7 @@ class ProfileFragment : Fragment() {
 
         profileViewModel.accountDetails.value = myDetails
 
-        view.profile_id?.text = profileViewModel.accountDetails.value!!.empID
+        view.profile_id?.text = profileViewModel.accountDetails.value!!.idNumber
 
         profileViewModel.accountDetails.observe(viewLifecycleOwner, Observer {
             profileViewModel.getInitials()

@@ -1,21 +1,14 @@
 package com.example.terasystemhrisv3.viewmodel
 
 import android.app.Application
-import android.os.Bundle
-import android.view.View
 import androidx.lifecycle.*
 import com.example.terasystemhrisv3.model.AccountDetails
 import com.example.terasystemhrisv3.service.WebServiceConnection
 import com.example.terasystemhrisv3.interfaces.NetworkRequestInterface
-import com.example.terasystemhrisv3.model.Leaves
 import com.example.terasystemhrisv3.util.*
 import org.json.JSONObject
-import java.net.URL
 import java.net.URLEncoder
-import java.text.ParseException
 import java.text.SimpleDateFormat
-import kotlin.collections.ArrayList
-import java.util.concurrent.TimeUnit
 
 
 class FileLeaveViewModel(application: Application) : AndroidViewModel(application), NetworkRequestInterface {
@@ -44,7 +37,7 @@ class FileLeaveViewModel(application: Application) : AndroidViewModel(applicatio
             }
             if(!isFieldNullOrEmpty(endDate.value.toString()) && isDateValid && !isFieldNullOrEmpty(selectedTypeOfLeave.value.toString()))
             {
-                var reqParam = URLEncoder.encode("userID", "UTF-8") + "=" + URLEncoder.encode(accountDetails.value?.username, "UTF-8")
+                var reqParam = URLEncoder.encode("userID", "UTF-8") + "=" + URLEncoder.encode(accountDetails.value?.userID, "UTF-8")
                 reqParam += "&" + URLEncoder.encode("type", "UTF-8") + "=" + URLEncoder.encode(selectedTypeOfLeave.value, "UTF-8")
                 reqParam += "&" + URLEncoder.encode("dateFrom", "UTF-8") + "=" + URLEncoder.encode(convertDateToStandardForm(startDate.value.toString()), "UTF-8")
                 reqParam += "&" + URLEncoder.encode("dateTo", "UTF-8") + "=" + URLEncoder.encode(convertDateToStandardForm(endDate.value.toString()), "UTF-8")
@@ -53,7 +46,7 @@ class FileLeaveViewModel(application: Application) : AndroidViewModel(applicatio
             }
             else if(!isFieldNullOrEmpty(selectedTypeOfLeave.value.toString()) && isFieldNullOrEmpty(endDate.value.toString()))
             {
-                var reqParam = URLEncoder.encode("userID", "UTF-8") + "=" + URLEncoder.encode(accountDetails.value?.username, "UTF-8")
+                var reqParam = URLEncoder.encode("userID", "UTF-8") + "=" + URLEncoder.encode(accountDetails.value?.userID, "UTF-8")
                 reqParam += "&" + URLEncoder.encode("type", "UTF-8") + "=" + URLEncoder.encode(selectedTypeOfLeave.value, "UTF-8")
                 reqParam += "&" + URLEncoder.encode("dateFrom", "UTF-8") + "=" + URLEncoder.encode(startDate.value, "UTF-8")
                 reqParam += "&" + URLEncoder.encode("time", "UTF-8") + "=" + URLEncoder.encode(selectedItem.value.toString(), "UTF-8")

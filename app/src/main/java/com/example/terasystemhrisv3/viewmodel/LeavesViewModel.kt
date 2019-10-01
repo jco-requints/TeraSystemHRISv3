@@ -39,7 +39,7 @@ class LeavesViewModel(application: Application) : AndroidViewModel(application),
     fun getLeaves(){
         if(isConnected(getApplication()))
         {
-            val reqParam = URLEncoder.encode("userID", "UTF-8") + "=" + URLEncoder.encode(accountDetails.value?.username, "UTF-8")
+            val reqParam = URLEncoder.encode("userID", "UTF-8") + "=" + URLEncoder.encode(accountDetails.value?.userID, "UTF-8")
             WebServiceConnection(this).execute(URLs.URL_GET_LEAVES, reqParam)
         }
         else

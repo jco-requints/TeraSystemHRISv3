@@ -45,19 +45,19 @@ class UpdateViewModel(application: Application) : AndroidViewModel(application),
         isLandlineValid.value = false
     }
 
-    fun addSpace(mobile: String) {
+    fun addSpace(mobile: String?) {
         val countryCode: String
         val mobileInitials: String
         val secondSet: String
         val thirdSet: String
-        if (mobile.count() == 13) {
+        if (mobile?.count() == 13) {
             countryCode = mobile.substring(0..2)
             mobileInitials = mobile.substring(3..5)
             secondSet = mobile.substring(6..8)
             thirdSet = mobile.substring(9..12)
             mobileNumber.value = "$countryCode $mobileInitials $secondSet $thirdSet"
 
-        } else if (mobile.count() == 11) {
+        } else if (mobile?.count() == 11) {
             mobileInitials = mobile.substring(0..3)
             secondSet = mobile.substring(4..6)
             thirdSet = mobile.substring(7..10)
@@ -120,8 +120,8 @@ class UpdateViewModel(application: Application) : AndroidViewModel(application),
     }
 
     fun saveNewProfile() {
-        accountDetails.value!!.username = accountDetails.value?.username!!
-        accountDetails.value!!.empID = accountDetails.value?.empID!!
+        accountDetails.value!!.userID = accountDetails.value?.userID!!
+        accountDetails.value!!.idNumber = accountDetails.value?.idNumber!!
         accountDetails.value!!.firstName = firstName.value.toString()
         accountDetails.value?.middleName = middleName.value
         accountDetails.value!!.lastName = lastName.value.toString()

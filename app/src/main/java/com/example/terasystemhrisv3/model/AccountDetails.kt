@@ -2,16 +2,34 @@ package com.example.terasystemhrisv3.model
 
 import android.os.Parcel
 import android.os.Parcelable
+import com.google.gson.annotations.Expose
+import com.google.gson.annotations.SerializedName
 
 data class AccountDetails(
-    var username: String,
-    var empID: String,
-    var firstName: String,
-    var middleName: String?,
-    var lastName: String,
-    var emailAddress: String,
-    var mobileNumber: String,
-    var landlineNumber: String?
+        @SerializedName("userID")
+        @Expose
+        var userID: String?,
+        @SerializedName("idNumber")
+        @Expose
+        var idNumber: String?,
+        @SerializedName("firstName")
+        @Expose
+        var firstName: String?,
+        @SerializedName("middleName")
+        @Expose
+        var middleName: String?,
+        @SerializedName("lastName")
+        @Expose
+        var lastName: String?,
+        @SerializedName("emailAddress")
+        @Expose
+        var emailAddress: String?,
+        @SerializedName("mobileNumber")
+        @Expose
+        var mobileNumber: String?,
+        @SerializedName("landlineNumber")
+        @Expose
+        var landlineNumber: String?
 ) : Parcelable {
     constructor(source: Parcel?) : this(
         source?.readString() ?: "",
@@ -25,8 +43,8 @@ data class AccountDetails(
     )
 
     override fun writeToParcel(dest: Parcel?, flags: Int) {
-        dest?.writeString(username)
-        dest?.writeString(empID)
+        dest?.writeString(userID)
+        dest?.writeString(idNumber)
         dest?.writeString(firstName)
         dest?.writeString(middleName)
         dest?.writeString(lastName)

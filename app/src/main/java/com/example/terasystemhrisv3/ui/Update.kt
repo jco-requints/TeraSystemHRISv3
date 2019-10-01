@@ -39,9 +39,9 @@ class Update : AppCompatActivity() {
         }
 
         updateViewModel.accountDetails.observe(this, Observer { userDetails ->
-            updateViewModel.userID.value = userDetails.username
-            profile_id_edit.setText(userDetails.empID)
-            updateViewModel.empID.value = userDetails.empID
+            updateViewModel.userID.value = userDetails.userID
+            profile_id_edit.setText(userDetails.idNumber)
+            updateViewModel.empID.value = userDetails.idNumber
             profile_id_edit.isEnabled = false
             firstname_edit.setText(userDetails.firstName)
             updateViewModel.firstName.value = userDetails.firstName

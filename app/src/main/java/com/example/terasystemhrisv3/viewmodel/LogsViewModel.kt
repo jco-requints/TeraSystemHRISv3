@@ -6,17 +6,25 @@ import com.example.terasystemhrisv3.model.AccountDetails
 import com.example.terasystemhrisv3.model.Logs
 import com.example.terasystemhrisv3.service.WebServiceConnection
 import com.example.terasystemhrisv3.interfaces.NetworkRequestInterface
+import com.example.terasystemhrisv3.model.GsonAccountDetails
+import com.example.terasystemhrisv3.model.GsonLogs
+import com.example.terasystemhrisv3.service.RetrofitFactory
 import com.example.terasystemhrisv3.util.*
+import com.google.gson.Gson
+import kotlinx.coroutines.*
 import org.json.JSONObject
+import retrofit2.HttpException
 import java.net.URLEncoder
 import java.util.ArrayList
 
-class LogsViewModel(application: Application) : AndroidViewModel(application), NetworkRequestInterface {
+class LogsViewModel(application: Application) : AndroidViewModel(application) {
 
     var webServiceError = SingleLiveEvent<String>()
     var accountDetails = MutableLiveData<AccountDetails>()
     var logs = MutableLiveData<Logs>()
     lateinit var logsHolder: Logs
+    private val job = SupervisorJob()
+    private val coroutineContext = Dispatchers.IO + job
     var logsList = MutableLiveData<ArrayList<Logs>>()
     val logsListHolder = ArrayList<Logs>()
     var showProgressbar = MutableLiveData<Boolean>()
@@ -30,8 +38,51 @@ class LogsViewModel(application: Application) : AndroidViewModel(application), N
     fun getTimeLogs(){
         if(isConnected(getApplication()))
         {
-            val reqParam = URLEncoder.encode("userID", "UTF-8") + "=" + URLEncoder.encode(accountDetails.value?.username, "UTF-8")
-            WebServiceConnection(this).execute(URLs.URL_GET_TIME_LOGS, reqParam)
+//            val service = RetrofitFactory.makeRetrofitService()
+//            CoroutineScope(coroutineContext).launch {
+//                val response = service.GetTimeLogs(accountDetails.value?.userID)
+//                withContext(Dispatchers.Main) {
+//                    try {
+//                        if (response.isSuccessful) {
+//                            val jsonObj = JSONObject(Gson().toJson(response.body()))
+//                            if(response.body()!!.status == "0")
+//                            {
+//                                val jsonArray = jsonObj.getJSONArray("timeLogs")
+//                                val gs = Gson()
+//                                val details = gs.fromJson(jsonObj.toString(), GsonLogs::class.java)
+//
+//                                for (i in 0 until jsonArray.length()) {
+//                                    logsHolder = Logs("","","","","","")
+//                                    val obj = jsonArray.getJSONObject(i)
+//                                    logsHolder.userID = details.userID!!
+//                                    logsHolder.date = convertDateToHumanDate(details.date!!)
+//                                    logsHolder.timeIn = convertTimeToStandardTime(details.timeIn!!)
+//                                    logsHolder.breakOut = convertTimeToStandardTime(details.breakOut!!)
+//                                    logsHolder.breakIn = convertTimeToStandardTime(details.breakIn!!)
+//                                    logsHolder.timeOut = convertTimeToStandardTime(details.timeOut!!)
+//                                    logs.value = logsHolder
+//                                    logsListHolder.add(logs.value!!)
+//                                }
+//                                logsList.value = logsListHolder
+//                            }
+//                            else
+//                            {
+//                                webServiceError.value = response.body()?.message
+//                            }
+//                            showProgressbar.postValue(false)
+//                        } else {
+//                            webServiceError.postValue("Error: ${response.code()}")
+//                            showProgressbar.postValue(false)
+//                        }
+//                    } catch (e: HttpException) {
+//                        webServiceError.postValue("Exception ${e.message}")
+//                        showProgressbar.postValue(false)
+//                    } catch (e: Throwable) {
+//                        webServiceError.postValue(e.message)
+//                        showProgressbar.postValue(false)
+//                    }
+//                }
+//            }
         }
         else
         {
@@ -43,48 +94,6 @@ class LogsViewModel(application: Application) : AndroidViewModel(application), N
 
     fun showAddTimeLog(){
         isAddTimeLogClicked.value = true
-    }
-
-    override fun beforeNetworkCall() {
-        logsList.value?.clear()
-        logsListHolder.clear()
-        showProgressbar.value = true
-    }
-
-    override fun afterNetworkCall(result: String?){
-        showProgressbar.value = false
-        try {
-            val jsonObject = JSONObject(result!!)
-            val status = jsonObject.get("status").toString()
-            if(status == "0")
-            {
-                val jsonArray = jsonObject.getJSONArray("timeLogs")
-                for (i in 0 until jsonArray.length()) {
-                    logsHolder = Logs("","","","","","")
-                    val obj = jsonArray.getJSONObject(i)
-                    logsHolder.userID = obj.getString("userID")
-                    logsHolder.date = convertDateToHumanDate(obj.getString("date"))
-                    logsHolder.timeIn = convertTimeToStandardTime(obj.getString("timeIn"))
-                    logsHolder.breakOut = convertTimeToStandardTime(obj.getString("breakOut"))
-                    logsHolder.breakIn = convertTimeToStandardTime(obj.getString("breakIn"))
-                    logsHolder.timeOut = convertTimeToStandardTime(obj.getString("timeOut"))
-                    logs.value = logsHolder
-                    logsListHolder.add(logs.value!!)
-                }
-                logsList.value = logsListHolder
-//                if adding an element
-//                logsList.value = logsList.value.apply {
-//
-//                }
-            }
-            else
-            {
-                webServiceError.value = jsonObject.get("message").toString()
-            }
-        } catch (ex: Exception){
-            webServiceError.value = result
-        }
-
     }
 
 }

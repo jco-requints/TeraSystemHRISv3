@@ -28,9 +28,10 @@ class AddTimeLogViewModel(application: Application) : AndroidViewModel(applicati
     fun addTimeLog() {
         if (isConnected(getApplication()))
         {
-            val reqParam = URLEncoder.encode("userID", "UTF-8") + "=" + URLEncoder.encode(accountDetails.value?.username, "UTF-8")
+            var reqParam = URLEncoder.encode("userID", "UTF-8") + "=" + URLEncoder.encode(accountDetails.value?.userID, "UTF-8")
+            reqParam += "&" + URLEncoder.encode("type", "UTF-8") + "=" + URLEncoder.encode(selectedItem.value.toString(), "UTF-8")
             val mURL = URL(URLs.URL_ADD_TIME_LOG).toString()
-            WebServiceConnection(this).execute(mURL, reqParam, selectedItem.value.toString())
+            WebServiceConnection(this).execute(mURL, reqParam)
         }
         else
         {

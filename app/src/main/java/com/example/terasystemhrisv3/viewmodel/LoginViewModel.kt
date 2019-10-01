@@ -2,15 +2,17 @@ package com.example.terasystemhrisv3.viewmodel
 
 import android.app.Application
 import androidx.lifecycle.*
-import com.example.terasystemhrisv3.util.URLs
 import com.example.terasystemhrisv3.util.isConnected
 import com.example.terasystemhrisv3.model.AccountDetails
-import com.example.terasystemhrisv3.service.WebServiceConnection
-import com.example.terasystemhrisv3.interfaces.NetworkRequestInterface
+import com.example.terasystemhrisv3.model.GsonAccountDetails
+import com.example.terasystemhrisv3.service.RetrofitFactory
+import com.google.gson.Gson
+import kotlinx.coroutines.*
+import retrofit2.HttpException
+import retrofit2.Response
 import org.json.JSONObject
-import java.net.URLEncoder
 
-class LoginViewModel(application: Application) : AndroidViewModel(application), NetworkRequestInterface {
+class LoginViewModel(application: Application) : AndroidViewModel(application) {
 
     var username = MutableLiveData<String>()
     var password = MutableLiveData<String>()
@@ -18,6 +20,8 @@ class LoginViewModel(application: Application) : AndroidViewModel(application), 
     var webServiceError = MutableLiveData<String>()
     var accountDetails = MutableLiveData<AccountDetails>()
     lateinit var accountDetailsHolder: AccountDetails
+    private val job = SupervisorJob()
+    private val coroutineContext = Dispatchers.IO + job
     var showProgressbar = MutableLiveData<Boolean>()
     val areFieldsEmpty: MediatorLiveData<Boolean> = MediatorLiveData()
 
@@ -36,47 +40,51 @@ class LoginViewModel(application: Application) : AndroidViewModel(application), 
     fun login(){
         if(isConnected(getApplication()))
         {
-            var reqParam = URLEncoder.encode("userID", "UTF-8") + "=" + URLEncoder.encode(username.value, "UTF-8")
-            reqParam += "&" + URLEncoder.encode("password", "UTF-8") + "=" + URLEncoder.encode(password.value, "UTF-8")
-            WebServiceConnection(this).execute(URLs.URL_LOGIN, reqParam)
+            showProgressbar.value = true
+            val service = RetrofitFactory.makeRetrofitService()
+            CoroutineScope(coroutineContext).launch {
+                val response = service.Login(username.value, password.value)
+                withContext(Dispatchers.Main) {
+                    try {
+                        if (response.isSuccessful) {
+                            val gs = Gson()
+                            val details = response.body()
+                            if(details?.status == "0")
+                            {
+                                accountDetailsHolder = AccountDetails("","","","","","","","")
+                                accountDetailsHolder.userID = details.user?.userID!!
+                                accountDetailsHolder.idNumber = details.user?.idNumber!!
+                                accountDetailsHolder.firstName = details.user?.firstName!!
+                                accountDetailsHolder.middleName = details.user?.middleName
+                                accountDetailsHolder.lastName = details.user?.lastName!!
+                                accountDetailsHolder.emailAddress = details.user?.emailAddress!!
+                                accountDetailsHolder.mobileNumber = details.user?.mobileNumber!!
+                                accountDetailsHolder.landlineNumber = details.user?.landlineNumber
+                                accountDetails.value = accountDetailsHolder
+                            }
+                            else
+                            {
+                                loginError.value = response.body()!!.message
+                            }
+                            showProgressbar.postValue(false)
+                        } else {
+                            loginError.postValue("Error: ${response.code()}")
+                            showProgressbar.postValue(false)
+                        }
+                    } catch (e: HttpException) {
+                        loginError.postValue("Exception ${e.message}")
+                        showProgressbar.postValue(false)
+                    } catch (e: Throwable) {
+                        loginError.postValue(e.message)
+                        showProgressbar.postValue(false)
+                    }
+                }
+            }
         }
         else
         {
             webServiceError.value = "No Internet Connection"
         }
-    }
-
-    override fun beforeNetworkCall() {
-        showProgressbar.value = true
-    }
-
-    override fun afterNetworkCall(result: String?){
-        showProgressbar.value = false
-        try {
-            var jsonObject = JSONObject(result!!)
-            val status = jsonObject.get("status").toString()
-            if(status == "0")
-            {
-                accountDetailsHolder = AccountDetails("","","","","","","","")
-                jsonObject = jsonObject.getJSONObject("user")
-                accountDetailsHolder.username = jsonObject?.get("userID").toString()
-                accountDetailsHolder.empID = jsonObject?.get("idNumber").toString()
-                accountDetailsHolder.firstName = jsonObject?.get("firstName").toString()
-                accountDetailsHolder.middleName = jsonObject?.get("middleName").toString()
-                accountDetailsHolder.lastName = jsonObject?.get("lastName").toString()
-                accountDetailsHolder.emailAddress = jsonObject?.get("emailAddress").toString()
-                accountDetailsHolder.mobileNumber = jsonObject?.get("mobileNumber").toString()
-                accountDetailsHolder.landlineNumber = jsonObject?.get("landline").toString()
-                accountDetails.value = accountDetailsHolder
-            }
-            else
-            {
-                loginError.value = jsonObject.get("message").toString()
-            }
-        } catch (ex: Exception){
-            webServiceError.value = result
-        }
-
     }
 
     private fun checkForEmptyFields() : Boolean {

@@ -10,10 +10,16 @@ import android.widget.Toast
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import com.example.terasystemhrisv3.R
+import com.example.terasystemhrisv3.service.RetrofitFactory
 import com.example.terasystemhrisv3.util.afterTextChanged
 import com.example.terasystemhrisv3.util.alertDialog
 import com.example.terasystemhrisv3.viewmodel.LoginViewModel
 import kotlinx.android.synthetic.main.activity_login.*
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
+import retrofit2.HttpException
 
 class LoginActivity : AppCompatActivity() {
 
