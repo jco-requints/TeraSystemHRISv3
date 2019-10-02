@@ -73,6 +73,9 @@ class Update : AppCompatActivity() {
         }
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            updateViewModel.mobileNumber.value = mobile_edit.addTextChangedListener(PhoneNumberFormattingTextWatcher("PH")).toString()
+        }
+        else{
             updateViewModel.mobileNumber.value = mobile_edit.addTextChangedListener(PhoneNumberFormattingTextWatcher()).toString()
         }
 
@@ -81,6 +84,9 @@ class Update : AppCompatActivity() {
         }
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            updateViewModel.landline.value = landline_edit.addTextChangedListener(PhoneNumberFormattingTextWatcher("PH")).toString()
+        }
+        else{
             updateViewModel.landline.value = landline_edit.addTextChangedListener(PhoneNumberFormattingTextWatcher()).toString()
         }
 

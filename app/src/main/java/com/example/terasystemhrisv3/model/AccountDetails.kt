@@ -29,7 +29,7 @@ data class AccountDetails(
         var mobileNumber: String?,
         @SerializedName("landlineNumber")
         @Expose
-        var landlineNumber: String?
+        var landlineNumber: String?=""
 ) : Parcelable {
     constructor(source: Parcel?) : this(
         source?.readString() ?: "",

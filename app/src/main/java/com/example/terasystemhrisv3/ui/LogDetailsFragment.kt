@@ -30,7 +30,7 @@ class LogDetailsFragment : Fragment() {
         }
         logDetailsViewModel = ViewModelProviders.of(this).get(LogDetailsViewModel::class.java)
         val view = inflater.inflate(R.layout.fragment_logdetails, container, false)
-        myInterface?.setTitle(logDetails.date)
+        myInterface?.setTitle(logDetails.date!!)
         myInterface?.setAddButtonTitle(null)
         myInterface?.setCancelButtonTitle("<")
         myInterface?.getAddButton()?.visibility = View.GONE
@@ -45,7 +45,7 @@ class LogDetailsFragment : Fragment() {
         view.breakIn?.text = logDetails.breakIn
         view.breakOut?.text = logDetails.breakOut
 
-        logDetailsViewModel.loadLogDetails(logDetails.timeIn, logDetails.timeOut, logDetails.breakIn, logDetails.breakOut)
+        logDetailsViewModel.loadLogDetails(logDetails.timeIn.toString(), logDetails.timeOut.toString(), logDetails.breakIn.toString(), logDetails.breakOut.toString())
 
         logDetailsViewModel.isTimeInEmpty.observe(viewLifecycleOwner, Observer {
             if(it)

@@ -38,51 +38,49 @@ class LogsViewModel(application: Application) : AndroidViewModel(application) {
     fun getTimeLogs(){
         if(isConnected(getApplication()))
         {
-//            val service = RetrofitFactory.makeRetrofitService()
-//            CoroutineScope(coroutineContext).launch {
-//                val response = service.GetTimeLogs(accountDetails.value?.userID)
-//                withContext(Dispatchers.Main) {
-//                    try {
-//                        if (response.isSuccessful) {
-//                            val jsonObj = JSONObject(Gson().toJson(response.body()))
-//                            if(response.body()!!.status == "0")
-//                            {
-//                                val jsonArray = jsonObj.getJSONArray("timeLogs")
-//                                val gs = Gson()
-//                                val details = gs.fromJson(jsonObj.toString(), GsonLogs::class.java)
-//
-//                                for (i in 0 until jsonArray.length()) {
-//                                    logsHolder = Logs("","","","","","")
-//                                    val obj = jsonArray.getJSONObject(i)
-//                                    logsHolder.userID = details.userID!!
-//                                    logsHolder.date = convertDateToHumanDate(details.date!!)
-//                                    logsHolder.timeIn = convertTimeToStandardTime(details.timeIn!!)
-//                                    logsHolder.breakOut = convertTimeToStandardTime(details.breakOut!!)
-//                                    logsHolder.breakIn = convertTimeToStandardTime(details.breakIn!!)
-//                                    logsHolder.timeOut = convertTimeToStandardTime(details.timeOut!!)
-//                                    logs.value = logsHolder
-//                                    logsListHolder.add(logs.value!!)
-//                                }
-//                                logsList.value = logsListHolder
-//                            }
-//                            else
-//                            {
-//                                webServiceError.value = response.body()?.message
-//                            }
-//                            showProgressbar.postValue(false)
-//                        } else {
-//                            webServiceError.postValue("Error: ${response.code()}")
-//                            showProgressbar.postValue(false)
-//                        }
-//                    } catch (e: HttpException) {
-//                        webServiceError.postValue("Exception ${e.message}")
-//                        showProgressbar.postValue(false)
-//                    } catch (e: Throwable) {
-//                        webServiceError.postValue(e.message)
-//                        showProgressbar.postValue(false)
-//                    }
-//                }
-//            }
+            showProgressbar.value = true
+            val service = RetrofitFactory.makeRetrofitService()
+            logsList.value?.clear()
+            logsListHolder.clear()
+            CoroutineScope(coroutineContext).launch {
+                val response = service.GetTimeLogs(accountDetails.value?.userID)
+                withContext(Dispatchers.Main) {
+                    try {
+                        if (response.isSuccessful) {
+                            val details = response.body()
+                            if(details?.status == "0")
+                            {
+                                for (i in 0 until details.timeLogs!!.count()) {
+                                    logsHolder = Logs("","","","","","")
+                                    logsHolder.userID = details.timeLogs!![i].userID
+                                    logsHolder.date = details.timeLogs!![i].date?.let { convertDateToHumanDate(it) }
+                                    logsHolder.timeIn = details.timeLogs!![i].timeIn?.let { convertTimeToStandardTime(it) }
+                                    logsHolder.breakOut = details.timeLogs!![i].timeOut?.let { convertTimeToStandardTime(it) }
+                                    logsHolder.breakIn = details.timeLogs!![i].breakIn?.let { convertTimeToStandardTime(it) }
+                                    logsHolder.timeOut = details.timeLogs!![i].breakOut?.let { convertTimeToStandardTime(it) }
+                                    logs.value = logsHolder
+                                    logsListHolder.add(logs.value!!)
+                                }
+                                logsList.value = logsListHolder
+                            }
+                            else
+                            {
+                                webServiceError.value = response.body()?.message
+                            }
+                            showProgressbar.postValue(false)
+                        } else {
+                            webServiceError.postValue("Error: ${response.code()}")
+                            showProgressbar.postValue(false)
+                        }
+                    } catch (e: HttpException) {
+                        webServiceError.postValue("Exception ${e.message}")
+                        showProgressbar.postValue(false)
+                    } catch (e: Throwable) {
+                        webServiceError.postValue(e.message)
+                        showProgressbar.postValue(false)
+                    }
+                }
+            }
         }
         else
         {

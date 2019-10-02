@@ -46,6 +46,8 @@ class LeavesViewModel(application: Application) : AndroidViewModel(application),
         {
             leavesList.value?.clear()
             leavesListHolder.clear()
+            showRecyclerView.value = false
+            showRemSLAndRemVL.value = false
             webServiceError.value = "No Internet Connection"
         }
     }

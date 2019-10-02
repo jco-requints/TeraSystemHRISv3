@@ -14,12 +14,10 @@ class FragmentActivityViewModel(application: Application) : AndroidViewModel(app
     private val KEY_POSITION = "keyPosition"
     private var navPosition: BottomNavigationPosition = BottomNavigationPosition.LOGS
     var webServiceError = MutableLiveData<String>()
-    var fragmentActivityError = MutableLiveData<String>()
     var accountDetails = MutableLiveData<AccountDetails>()
     var showProgressbar = MutableLiveData<Boolean>()
     var itemSelected = MutableLiveData<Int>()
     var showAlert = MutableLiveData<Boolean>()
-    var logOutAlertDialogMessage = MutableLiveData<String>()
     var logOutAlertDialogResponse = MutableLiveData<Boolean>()
 
     init {

@@ -12,23 +12,5 @@ class GsonLogs{
     var message: String? = null
     @SerializedName("timeLogs")
     @Expose
-    var timeLogs: Array<Logs>? = null
-    @SerializedName("userID")
-    @Expose
-    var userID: String? = null
-    @SerializedName("date")
-    @Expose
-    var date: String? = null
-    @SerializedName("timeIn")
-    @Expose
-    var timeIn: String? = null
-    @SerializedName("breakOut")
-    @Expose
-    var breakOut: String? = null
-    @SerializedName("breakIn")
-    @Expose
-    var breakIn: String? = null
-    @SerializedName("timeOut")
-    @Expose
-    var timeOut: String? = null
+    var timeLogs: ArrayList<Logs>? = null
 }

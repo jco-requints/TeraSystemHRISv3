@@ -63,6 +63,7 @@ class AddTimeLogFragment : Fragment() {
         myInterface?.getCancelButton()?.setOnClickListener {
             val fragmentManager = myInterface?.getSupportFragmentManager()
             fragmentManager?.popBackStackImmediate()
+
         }
 
         myInterface?.getAddButton()?.setOnClickListener {

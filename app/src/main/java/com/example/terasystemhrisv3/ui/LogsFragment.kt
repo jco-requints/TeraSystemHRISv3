@@ -76,7 +76,10 @@ class LogsFragment : Fragment(){
         })
 
         logsViewModel.webServiceError.observe(viewLifecycleOwner, Observer { message ->
-            this.context?.let { mContext -> alertDialog(mContext, message) }
+            if(!message.isNullOrEmpty())
+            {
+                this.context?.let { mContext -> alertDialog(mContext, message) }
+            }
         })
 
         return view

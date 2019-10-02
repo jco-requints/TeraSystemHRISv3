@@ -2,14 +2,28 @@ package com.example.terasystemhrisv3.model
 
 import android.os.Parcel
 import android.os.Parcelable
+import com.google.gson.annotations.Expose
+import com.google.gson.annotations.SerializedName
 
 data class Logs(
-  var userID: String,
-  var date: String,
-  var timeIn: String,
-  var breakOut: String,
-  var breakIn: String,
-  var timeOut: String
+        @SerializedName("userID")
+        @Expose
+        var userID: String?,
+        @SerializedName("date")
+        @Expose
+        var date: String?,
+        @SerializedName("timeIn")
+        @Expose
+        var timeIn: String?,
+        @SerializedName("breakOut")
+        @Expose
+        var breakOut: String?,
+        @SerializedName("breakIn")
+        @Expose
+        var breakIn: String?,
+        @SerializedName("timeOut")
+        @Expose
+        var timeOut: String?
 ) : Parcelable {
   constructor(source: Parcel?) : this(
     source?.readString() ?: "",

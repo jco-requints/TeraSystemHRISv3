@@ -4,13 +4,10 @@ import android.app.Application
 import androidx.lifecycle.*
 import com.example.terasystemhrisv3.util.isConnected
 import com.example.terasystemhrisv3.model.AccountDetails
-import com.example.terasystemhrisv3.model.GsonAccountDetails
 import com.example.terasystemhrisv3.service.RetrofitFactory
 import com.google.gson.Gson
 import kotlinx.coroutines.*
 import retrofit2.HttpException
-import retrofit2.Response
-import org.json.JSONObject
 
 class LoginViewModel(application: Application) : AndroidViewModel(application) {
 
@@ -47,20 +44,10 @@ class LoginViewModel(application: Application) : AndroidViewModel(application) {
                 withContext(Dispatchers.Main) {
                     try {
                         if (response.isSuccessful) {
-                            val gs = Gson()
                             val details = response.body()
                             if(details?.status == "0")
                             {
-                                accountDetailsHolder = AccountDetails("","","","","","","","")
-                                accountDetailsHolder.userID = details.user?.userID!!
-                                accountDetailsHolder.idNumber = details.user?.idNumber!!
-                                accountDetailsHolder.firstName = details.user?.firstName!!
-                                accountDetailsHolder.middleName = details.user?.middleName
-                                accountDetailsHolder.lastName = details.user?.lastName!!
-                                accountDetailsHolder.emailAddress = details.user?.emailAddress!!
-                                accountDetailsHolder.mobileNumber = details.user?.mobileNumber!!
-                                accountDetailsHolder.landlineNumber = details.user?.landlineNumber
-                                accountDetails.value = accountDetailsHolder
+                                accountDetails.value = details.user
                             }
                             else
                             {
