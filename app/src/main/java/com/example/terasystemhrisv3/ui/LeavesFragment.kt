@@ -17,6 +17,7 @@ import com.example.terasystemhrisv3.interfaces.AppBarController
 import com.example.terasystemhrisv3.interfaces.FragmentNavigator
 import com.example.terasystemhrisv3.util.alertDialog
 import com.example.terasystemhrisv3.viewmodel.LeavesViewModel
+import com.example.terasystemhrisv3.viewmodel.ViewModelFactory
 import kotlinx.android.synthetic.main.fragment_leaves.view.*
 
 class LeavesFragment : Fragment() {
@@ -30,12 +31,12 @@ class LeavesFragment : Fragment() {
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val bundle = this.arguments
-        leavesViewModel = ViewModelProviders.of(this).get(LeavesViewModel::class.java)
         linearLayoutManager = LinearLayoutManager(this.context)
         if (bundle != null)
         {
             myDetails = bundle.getParcelable("keyAccountDetails")!!
         }
+        leavesViewModel = ViewModelProviders.of(this, ViewModelFactory { LeavesViewModel(activity!!.application, myDetails) }).get(LeavesViewModel::class.java)
         val view = inflater.inflate(R.layout.fragment_leaves, container, false)
         myInterface?.setTitle(getString(R.string.leaves_title))
         myInterface?.setAddButtonTitle("+")
@@ -51,9 +52,12 @@ class LeavesFragment : Fragment() {
             fragmentNavigatorInterface?.showFileLeave(mBundle, FileLeaveFragment())
         }
 
-        leavesViewModel.accountDetails.value = myDetails
-
-        leavesViewModel.getLeaves()
+        leavesViewModel.accountDetails.observe(viewLifecycleOwner, Observer {
+            if(it != null)
+            {
+                leavesViewModel.getLeaves()
+            }
+        })
 
         leavesViewModel.showProgressbar.observe(viewLifecycleOwner, Observer {
             view.leavesProgressBarHolder.visibility = if (it) View.VISIBLE

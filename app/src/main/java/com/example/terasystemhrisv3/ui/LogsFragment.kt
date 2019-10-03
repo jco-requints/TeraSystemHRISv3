@@ -5,6 +5,7 @@ import android.util.TypedValue
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.appcompat.app.AppCompatActivity
 import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProviders
@@ -17,10 +18,11 @@ import com.example.terasystemhrisv3.interfaces.AppBarController
 import com.example.terasystemhrisv3.interfaces.FragmentNavigator
 import com.example.terasystemhrisv3.util.alertDialog
 import com.example.terasystemhrisv3.viewmodel.LogsViewModel
+import com.example.terasystemhrisv3.viewmodel.ViewModelFactory
 import kotlinx.android.synthetic.main.fragment_logs.view.*
 import kotlinx.android.synthetic.main.fragment_logs.view.logsProgressBarHolder
 
-class LogsFragment : Fragment(){
+class LogsFragment : Fragment() {
 
     private var myInterface: AppBarController? = null
     private var fragmentNavigatorInterface: FragmentNavigator? = null
@@ -31,12 +33,12 @@ class LogsFragment : Fragment(){
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val bundle = this.arguments
-        logsViewModel = ViewModelProviders.of(this).get(LogsViewModel::class.java)
-        linearLayoutManager = LinearLayoutManager(this.context)
         if (bundle != null)
         {
             myDetails = bundle.getParcelable("keyAccountDetails")!!
         }
+        logsViewModel = ViewModelProviders.of(this, ViewModelFactory { LogsViewModel(activity!!.application, myDetails) }).get(LogsViewModel::class.java)
+        linearLayoutManager = LinearLayoutManager(this.context)
         val view = inflater.inflate(R.layout.fragment_logs, container, false)
         myInterface?.setTitle(getString(R.string.logs_title))
         myInterface?.setAddButtonTitle("+")
@@ -50,6 +52,13 @@ class LogsFragment : Fragment(){
             logsViewModel.showAddTimeLog()
         }
 
+        logsViewModel.accountDetails.observe(viewLifecycleOwner, Observer {
+            if(it != null)
+            {
+                logsViewModel.getTimeLogs()
+            }
+        })
+
         logsViewModel.isAddTimeLogClicked.observe(viewLifecycleOwner, Observer {
             if(it)
             {
@@ -59,10 +68,6 @@ class LogsFragment : Fragment(){
                 fragmentNavigatorInterface?.showAddTimeLog(mBundle, AddTimeLogFragment())
             }
         })
-
-        logsViewModel.accountDetails.value = myDetails
-
-        logsViewModel.getTimeLogs()
 
         logsViewModel.showProgressbar.observe(viewLifecycleOwner, Observer {
             view.logsProgressBarHolder.visibility = if (it) View.VISIBLE

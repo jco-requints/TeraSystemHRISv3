@@ -12,7 +12,7 @@ import java.text.ParseException
 import kotlin.collections.ArrayList
 import java.util.concurrent.TimeUnit
 
-class LeavesViewModel(application: Application) : AndroidViewModel(application) {
+class LeavesViewModel(application: Application, retrievedAccountDetails: AccountDetails) : AndroidViewModel(application) {
 
     var webServiceError = SingleLiveEvent<String>()
     var accountDetails = MutableLiveData<AccountDetails>()
@@ -34,6 +34,8 @@ class LeavesViewModel(application: Application) : AndroidViewModel(application) 
         showRemSLAndRemVL.value = false
         showProgressbar.value = false
         isFileLeaveClicked.value = false
+        accountDetails.value = retrievedAccountDetails
+        getLeaves()
     }
 
     fun getLeaves(){

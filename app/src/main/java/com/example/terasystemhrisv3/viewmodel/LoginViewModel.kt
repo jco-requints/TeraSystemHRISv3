@@ -49,7 +49,7 @@ class LoginViewModel(application: Application) : AndroidViewModel(application) {
                             }
                             else
                             {
-                                loginError.value = response.body()!!.message
+                                loginError.value = response.body()?.message
                             }
                             showProgressbar.postValue(false)
                         } else {

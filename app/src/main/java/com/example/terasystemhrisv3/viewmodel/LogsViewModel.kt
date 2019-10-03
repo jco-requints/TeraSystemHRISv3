@@ -10,7 +10,7 @@ import kotlinx.coroutines.*
 import retrofit2.HttpException
 import java.util.ArrayList
 
-class LogsViewModel(application: Application) : AndroidViewModel(application) {
+class LogsViewModel(application: Application, retrievedAccountDetails: AccountDetails) : AndroidViewModel(application) {
 
     var webServiceError = SingleLiveEvent<String>()
     var accountDetails = MutableLiveData<AccountDetails>()
@@ -26,6 +26,8 @@ class LogsViewModel(application: Application) : AndroidViewModel(application) {
     init {
         showProgressbar.value = false
         isAddTimeLogClicked.value = false
+        accountDetails.value = retrievedAccountDetails
+        getTimeLogs()
     }
 
     fun getTimeLogs(){
