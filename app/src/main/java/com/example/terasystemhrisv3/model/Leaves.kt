@@ -2,13 +2,25 @@ package com.example.terasystemhrisv3.model
 
 import android.os.Parcel
 import android.os.Parcelable
+import com.google.gson.annotations.Expose
+import com.google.gson.annotations.SerializedName
 
 data class Leaves(
-  var userID: String,
-  var type: String,
-  var dateFrom: String,
-  var dateTo: String,
-  var time: String
+        @SerializedName("userID")
+        @Expose
+        var userID: String?,
+        @SerializedName("type")
+        @Expose
+        var type: String?,
+        @SerializedName("dateFrom")
+        @Expose
+        var dateFrom: String?,
+        @SerializedName("dateTo")
+        @Expose
+        var dateTo: String?,
+        @SerializedName("time")
+        @Expose
+        var time: String?
 ) : Parcelable {
   constructor(source: Parcel?) : this(
     source?.readString() ?: "",

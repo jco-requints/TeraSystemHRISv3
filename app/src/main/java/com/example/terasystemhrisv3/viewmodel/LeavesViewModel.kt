@@ -3,27 +3,27 @@ package com.example.terasystemhrisv3.viewmodel
 import android.app.Application
 import androidx.lifecycle.*
 import com.example.terasystemhrisv3.model.AccountDetails
-import com.example.terasystemhrisv3.service.WebServiceConnection
-import com.example.terasystemhrisv3.interfaces.NetworkRequestInterface
 import com.example.terasystemhrisv3.model.Leaves
+import com.example.terasystemhrisv3.service.RetrofitFactory
 import com.example.terasystemhrisv3.util.*
-import org.json.JSONObject
-import java.net.URLEncoder
+import kotlinx.coroutines.*
+import retrofit2.HttpException
 import java.text.ParseException
 import kotlin.collections.ArrayList
 import java.util.concurrent.TimeUnit
 
-
-class LeavesViewModel(application: Application) : AndroidViewModel(application), NetworkRequestInterface {
+class LeavesViewModel(application: Application) : AndroidViewModel(application) {
 
     var webServiceError = SingleLiveEvent<String>()
     var accountDetails = MutableLiveData<AccountDetails>()
     var leaves = MutableLiveData<Leaves>()
     var remVL: Double = 0.0
     var remSL: Double = 0.0
+    private val job = SupervisorJob()
+    private val coroutineContext = Dispatchers.IO + job
     lateinit var leavesHolder: Leaves
     var leavesList = MutableLiveData<ArrayList<Leaves>>()
-    private val leavesListHolder = ArrayList<Leaves>()
+    var leavesListHolder = ArrayList<Leaves>()
     var showProgressbar = MutableLiveData<Boolean>()
     var showRemSLAndRemVL = MutableLiveData<Boolean>()
     var showRecyclerView = MutableLiveData<Boolean>()
@@ -39,8 +39,62 @@ class LeavesViewModel(application: Application) : AndroidViewModel(application),
     fun getLeaves(){
         if(isConnected(getApplication()))
         {
-            val reqParam = URLEncoder.encode("userID", "UTF-8") + "=" + URLEncoder.encode(accountDetails.value?.userID, "UTF-8")
-            WebServiceConnection(this).execute(URLs.URL_GET_LEAVES, reqParam)
+            showProgressbar.value = true
+            showRecyclerView.value = false
+            showRemSLAndRemVL.value = false
+            val service = RetrofitFactory.makeRetrofitService()
+            leavesList.value?.clear()
+            leavesListHolder.clear()
+            CoroutineScope(coroutineContext).launch {
+                val response = service.GetLeaves(accountDetails.value?.userID)
+                withContext(Dispatchers.Main) {
+                    try {
+                        if (response.isSuccessful) {
+                            val details = response.body()
+                            if(details?.status == "0")
+                            {
+                                remVL = 13.0
+                                remSL = 13.0
+                                for (i in 0 until details.leaves!!.count()) {
+                                    leavesHolder = Leaves("","","","","")
+                                    leavesHolder.userID = details.leaves!![i].userID
+                                    leavesHolder.type = details.leaves!![i].type?.let { type -> convertLeaveTypeToReadableForm(type) }
+                                    leavesHolder.dateFrom = details.leaves!![i].dateFrom?.let { dateFrom -> convertDateToHumanDate(dateFrom) }
+                                    leavesHolder.dateTo = details.leaves!![i].dateTo?.let { dateTo -> convertDateToHumanDate(dateTo) }
+                                    leavesHolder.time = convertTimeToReadableForm(details.leaves!![i].time.toString(), details.leaves!![i].dateFrom.toString(), details.leaves!![i].dateTo.toString())
+                                    if(leavesHolder.type == "Vacation Leave")
+                                    {
+                                        remVL -= leavesHolder.time!!.toFloat()
+                                    }
+                                    else
+                                    {
+                                        remSL -= leavesHolder.time!!.toFloat()
+                                    }
+                                    leaves.value = leavesHolder
+                                    leavesListHolder.add(leaves.value!!)
+                                }
+                                showRecyclerView.value = true
+                                showRemSLAndRemVL.value = true
+                                leavesList.value = leavesListHolder
+                            }
+                            else
+                            {
+                                webServiceError.value = response.body()?.message
+                            }
+                            showProgressbar.postValue(false)
+                        } else {
+                            webServiceError.postValue("Error: ${response.code()}")
+                            showProgressbar.postValue(false)
+                        }
+                    } catch (e: HttpException) {
+                        webServiceError.postValue("Exception ${e.message}")
+                        showProgressbar.postValue(false)
+                    } catch (e: Throwable) {
+                        webServiceError.postValue(e.message)
+                        showProgressbar.postValue(false)
+                    }
+                }
+            }
         }
         else
         {
@@ -52,57 +106,7 @@ class LeavesViewModel(application: Application) : AndroidViewModel(application),
         }
     }
 
-    override fun beforeNetworkCall() {
-        leavesList.value?.clear()
-        leavesListHolder.clear()
-        showRecyclerView.value = false
-        showRemSLAndRemVL.value = false
-        showProgressbar.value = true
-    }
-
-    override fun afterNetworkCall(result: String?){
-        showProgressbar.value = false
-        try {
-            remVL = 13.0
-            remSL = 13.0
-            val jsonObject = JSONObject(result!!)
-            val status = jsonObject.get("status").toString()
-            if(status == "0")
-            {
-                val jsonArray = jsonObject.getJSONArray("leaves")
-                for (i in 0 until jsonArray.length()) {
-                    leavesHolder = Leaves("","","","","")
-                    val obj = jsonArray.getJSONObject(i)
-                    leavesHolder.userID = obj.getString("userID")
-                    leavesHolder.type = convertLeaveTypeToReadableForm(obj.getString("type"))
-                    leavesHolder.dateFrom = convertDateToHumanDate(obj.getString("dateFrom"))
-                    leavesHolder.dateTo = convertDateToHumanDate(obj.getString("dateTo"))
-                    leavesHolder.time = convertTimeToReadableForm(obj.getString("time"), obj.getString("dateFrom"), obj.getString("dateTo"))
-                    if(leavesHolder.type == "Vacation Leave")
-                    {
-                        remVL -= leavesHolder.time.toFloat()
-                    }
-                    else
-                    {
-                        remSL -= leavesHolder.time.toFloat()
-                    }
-                    leaves.value = leavesHolder
-                    leavesListHolder.add(leaves.value!!)
-                }
-                showRecyclerView.value = true
-                showRemSLAndRemVL.value = true
-                leavesList.value = leavesListHolder
-            }
-            else
-            {
-                webServiceError.value = jsonObject.get("message").toString()
-            }
-        } catch (ex: Exception){
-            webServiceError.value = result
-        }
-    }
-
-    fun convertLeaveTypeToReadableForm(leaveType: String): String {
+    private fun convertLeaveTypeToReadableForm(leaveType: String): String {
         var convertedLeaveType = ""
         return try {
             convertedLeaveType = if(leaveType == "1") {
@@ -117,13 +121,13 @@ class LeavesViewModel(application: Application) : AndroidViewModel(application),
         }
     }
 
-    fun convertTimeToReadableForm(time: String, dateFrom: String, dateTo: String): String {
+    private fun convertTimeToReadableForm(time: String, dateFrom: String, dateTo: String): String {
         var convertedTime = ""
         val total: Float
         try {
             if(time == "1")
             {
-                if(dateTo == "null")
+                if(dateTo.isEmpty())
                 {
                     convertedTime = "1"
                 }
@@ -149,9 +153,9 @@ class LeavesViewModel(application: Application) : AndroidViewModel(application),
         }
     }
 
-    fun trimTrailingZero(value: String): String {
-        return if (!value.isNullOrEmpty()) {
-            if (value!!.indexOf(".") < 0) {
+    private fun trimTrailingZero(value: String): String {
+        return if (value.isNotEmpty()) {
+            if (value.indexOf(".") < 0) {
                 value
 
             } else {

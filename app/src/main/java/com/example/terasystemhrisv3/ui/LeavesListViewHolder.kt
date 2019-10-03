@@ -17,17 +17,17 @@ class LeavesListViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         this.leaves = leaves
         val dateFrom: String
         val dateTo: String
-        if(leaves.dateTo.isNullOrEmpty() || leaves.dateTo == "null")
+        if(leaves.dateTo.isNullOrEmpty())
         {
-            dateFrom = leaves.dateFrom
+            dateFrom = leaves.dateFrom!!
             view.leaveDuration.text = dateFrom
             view.leaveType.text = leaves.type
             view.numberOfDays.text = leaves.time
         }
         else
         {
-            dateFrom = leaves.dateFrom
-            dateTo = leaves.dateTo
+            dateFrom = leaves.dateFrom!!
+            dateTo = leaves.dateTo!!
             view.leaveDuration.text = "$dateFrom to $dateTo"
             view.leaveType.text = leaves.type
             view.numberOfDays.text = leaves.time

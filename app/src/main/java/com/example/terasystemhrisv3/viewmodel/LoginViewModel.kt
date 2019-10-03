@@ -5,7 +5,6 @@ import androidx.lifecycle.*
 import com.example.terasystemhrisv3.util.isConnected
 import com.example.terasystemhrisv3.model.AccountDetails
 import com.example.terasystemhrisv3.service.RetrofitFactory
-import com.google.gson.Gson
 import kotlinx.coroutines.*
 import retrofit2.HttpException
 
@@ -16,7 +15,6 @@ class LoginViewModel(application: Application) : AndroidViewModel(application) {
     var loginError = MutableLiveData<String>()
     var webServiceError = MutableLiveData<String>()
     var accountDetails = MutableLiveData<AccountDetails>()
-    lateinit var accountDetailsHolder: AccountDetails
     private val job = SupervisorJob()
     private val coroutineContext = Dispatchers.IO + job
     var showProgressbar = MutableLiveData<Boolean>()

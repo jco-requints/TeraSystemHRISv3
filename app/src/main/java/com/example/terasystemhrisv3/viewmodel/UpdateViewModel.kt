@@ -2,17 +2,15 @@ package com.example.terasystemhrisv3.viewmodel
 
 import android.app.Application
 import androidx.lifecycle.*
-import com.example.terasystemhrisv3.util.URLs
 import com.example.terasystemhrisv3.util.isConnected
 import com.example.terasystemhrisv3.model.AccountDetails
-import com.example.terasystemhrisv3.interfaces.NetworkRequestInterface
-import com.example.terasystemhrisv3.service.WebServiceConnection
-import org.json.JSONObject
-import java.net.URLEncoder
 import android.util.Patterns.EMAIL_ADDRESS
+import com.example.terasystemhrisv3.service.RetrofitFactory
+import kotlinx.coroutines.*
+import retrofit2.HttpException
 import java.util.regex.Pattern
 
-class UpdateViewModel(application: Application) : AndroidViewModel(application), NetworkRequestInterface {
+class UpdateViewModel(application: Application) : AndroidViewModel(application) {
 
     var webServiceError = MutableLiveData<String>()
     var accountDetails = MutableLiveData<AccountDetails>()
@@ -35,6 +33,8 @@ class UpdateViewModel(application: Application) : AndroidViewModel(application),
     var isEmailValid = MutableLiveData<Boolean>()
     var isMobileNumberValid = MutableLiveData<Boolean>()
     var isLandlineValid = MutableLiveData<Boolean>()
+    private val job = SupervisorJob()
+    private val coroutineContext = Dispatchers.IO + job
 
     init {
         showProgressbar.value = false
@@ -103,14 +103,40 @@ class UpdateViewModel(application: Application) : AndroidViewModel(application),
         {
             if(isRequiredFieldEmpty.value == false && isEmailValid.value == true &&  isMobileNumberValid.value == true && isLandlineValid.value == true)
             {
-                var reqParam = URLEncoder.encode("userID", "UTF-8") + "=" + URLEncoder.encode(userID.value, "UTF-8")
-                reqParam += "&" + URLEncoder.encode("firstName", "UTF-8") + "=" + URLEncoder.encode(firstName.value, "UTF-8")
-                reqParam += "&" + URLEncoder.encode("middleName", "UTF-8") + "=" + URLEncoder.encode(middleName.value, "UTF-8")
-                reqParam += "&" + URLEncoder.encode("lastName", "UTF-8") + "=" + URLEncoder.encode(lastName.value, "UTF-8")
-                reqParam += "&" + URLEncoder.encode("emailAddress", "UTF-8") + "=" + URLEncoder.encode(emailAddress.value, "UTF-8")
-                reqParam += "&" + URLEncoder.encode("mobileNumber", "UTF-8") + "=" + URLEncoder.encode(mobileNumber.value?.replace(" ", ""), "UTF-8")
-                reqParam += "&" + URLEncoder.encode("landline", "UTF-8") + "=" + URLEncoder.encode(landline.value?.replace(" ", ""), "UTF-8")
-                WebServiceConnection(this).execute(URLs.URL_UPDATE_PROFILE, reqParam)
+                showProgressbar.value = true
+                val service = RetrofitFactory.makeRetrofitService()
+                CoroutineScope(coroutineContext).launch {
+                    val response = service.Update(userID.value!!, firstName.value!!, middleName.value.toString(), lastName.value!!, emailAddress.value!!, mobileNumber.value?.replace(" ", "").toString(), landline.value?.replace(" ", "").toString())
+                    withContext(Dispatchers.Main) {
+                        try {
+                            if (response.isSuccessful) {
+                                val details = response.body()
+                                if(details?.status == "0")
+                                {
+                                    isUpdateSuccessful.value = true
+                                }
+                                else
+                                {
+                                    webServiceError.value = response.body()?.message
+                                    isUpdateSuccessful.value = false
+                                }
+                                showProgressbar.postValue(false)
+                            } else {
+                                webServiceError.postValue("Error: ${response.code()}")
+                                showProgressbar.postValue(false)
+                                isUpdateSuccessful.value = false
+                            }
+                        } catch (e: HttpException) {
+                            webServiceError.postValue("Exception ${e.message}")
+                            showProgressbar.postValue(false)
+                            isUpdateSuccessful.value = false
+                        } catch (e: Throwable) {
+                            webServiceError.postValue(e.message)
+                            showProgressbar.postValue(false)
+                            isUpdateSuccessful.value = false
+                        }
+                    }
+                }
             }
         }
         else
@@ -146,30 +172,6 @@ class UpdateViewModel(application: Application) : AndroidViewModel(application),
         if (mobileNumber.value.isNullOrEmpty()) {
             mobileNumberErrorMsg.value = "This field cannot be blank"
             isRequiredFieldEmpty.value = true
-        }
-    }
-
-    override fun beforeNetworkCall() {
-        showProgressbar.value = true
-    }
-
-    override fun afterNetworkCall(result: String?) {
-        showProgressbar.value = false
-        try {
-            val jsonObject = JSONObject(result!!)
-            val status = jsonObject.get("status").toString()
-            if(status == "0")
-            {
-                isUpdateSuccessful.value = true
-            }
-            else
-            {
-                webServiceError.value = jsonObject.get("message").toString()
-                isUpdateSuccessful.value = false
-            }
-        } catch (ex: Exception){
-            webServiceError.value = result
-            isUpdateSuccessful.value = false
         }
     }
 }

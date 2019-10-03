@@ -3,15 +3,14 @@ package com.example.terasystemhrisv3.viewmodel
 import android.app.Application
 import androidx.lifecycle.*
 import com.example.terasystemhrisv3.model.AccountDetails
-import com.example.terasystemhrisv3.service.WebServiceConnection
-import com.example.terasystemhrisv3.interfaces.NetworkRequestInterface
+import com.example.terasystemhrisv3.service.RetrofitFactory
 import com.example.terasystemhrisv3.util.*
-import org.json.JSONObject
-import java.net.URLEncoder
+import kotlinx.coroutines.*
+import retrofit2.HttpException
 import java.text.SimpleDateFormat
 
 
-class FileLeaveViewModel(application: Application) : AndroidViewModel(application), NetworkRequestInterface {
+class FileLeaveViewModel(application: Application) : AndroidViewModel(application) {
 
     var webServiceError = SingleLiveEvent<String>()
     var selectedTypeOfLeave = MutableLiveData<String>()
@@ -19,6 +18,8 @@ class FileLeaveViewModel(application: Application) : AndroidViewModel(applicatio
     var startDate = MutableLiveData<String>()
     var endDate = MutableLiveData<String>()
     var accountDetails = MutableLiveData<AccountDetails>()
+    private val job = SupervisorJob()
+    private val coroutineContext = Dispatchers.IO + job
     var showProgressbar = MutableLiveData<Boolean>()
     var isFileLeaveSuccesful = MutableLiveData<Boolean>()
 
@@ -37,20 +38,77 @@ class FileLeaveViewModel(application: Application) : AndroidViewModel(applicatio
             }
             if(!isFieldNullOrEmpty(endDate.value.toString()) && isDateValid && !isFieldNullOrEmpty(selectedTypeOfLeave.value.toString()))
             {
-                var reqParam = URLEncoder.encode("userID", "UTF-8") + "=" + URLEncoder.encode(accountDetails.value?.userID, "UTF-8")
-                reqParam += "&" + URLEncoder.encode("type", "UTF-8") + "=" + URLEncoder.encode(selectedTypeOfLeave.value, "UTF-8")
-                reqParam += "&" + URLEncoder.encode("dateFrom", "UTF-8") + "=" + URLEncoder.encode(convertDateToStandardForm(startDate.value.toString()), "UTF-8")
-                reqParam += "&" + URLEncoder.encode("dateTo", "UTF-8") + "=" + URLEncoder.encode(convertDateToStandardForm(endDate.value.toString()), "UTF-8")
-                reqParam += "&" + URLEncoder.encode("time", "UTF-8") + "=" + URLEncoder.encode(selectedItem.value.toString(), "UTF-8")
-                WebServiceConnection(this).execute(URLs.URL_ADD_LEAVE, reqParam)
+                showProgressbar.value = true
+                val service = RetrofitFactory.makeRetrofitService()
+                CoroutineScope(coroutineContext).launch {
+                    val response = service.AddLeaveWholeDay(accountDetails.value?.userID.toString(), selectedTypeOfLeave.value.toString(), convertDateToStandardForm(startDate.value.toString()), convertDateToStandardForm(endDate.value.toString()), selectedItem.value.toString())
+                    withContext(Dispatchers.Main) {
+                        try {
+                            if (response.isSuccessful) {
+                                val details = response.body()
+                                if(details?.status == "0")
+                                {
+                                    isFileLeaveSuccesful.value = true
+                                }
+                                else
+                                {
+                                    webServiceError.value = response.body()?.message
+                                    isFileLeaveSuccesful.value = false
+                                }
+                                showProgressbar.postValue(false)
+                            } else {
+                                webServiceError.postValue("Error: ${response.code()}")
+                                showProgressbar.postValue(false)
+                                isFileLeaveSuccesful.value = false
+                            }
+                        } catch (e: HttpException) {
+                            webServiceError.postValue("Exception ${e.message}")
+                            showProgressbar.postValue(false)
+                            isFileLeaveSuccesful.value = false
+                        } catch (e: Throwable) {
+                            webServiceError.postValue(e.message)
+                            showProgressbar.postValue(false)
+                            isFileLeaveSuccesful.value = false
+                        }
+                    }
+                }
             }
             else if(!isFieldNullOrEmpty(selectedTypeOfLeave.value.toString()) && isFieldNullOrEmpty(endDate.value.toString()))
             {
-                var reqParam = URLEncoder.encode("userID", "UTF-8") + "=" + URLEncoder.encode(accountDetails.value?.userID, "UTF-8")
-                reqParam += "&" + URLEncoder.encode("type", "UTF-8") + "=" + URLEncoder.encode(selectedTypeOfLeave.value, "UTF-8")
-                reqParam += "&" + URLEncoder.encode("dateFrom", "UTF-8") + "=" + URLEncoder.encode(startDate.value, "UTF-8")
-                reqParam += "&" + URLEncoder.encode("time", "UTF-8") + "=" + URLEncoder.encode(selectedItem.value.toString(), "UTF-8")
-                WebServiceConnection(this).execute(URLs.URL_ADD_LEAVE, reqParam)
+                showProgressbar.value = true
+                val service = RetrofitFactory.makeRetrofitService()
+                CoroutineScope(coroutineContext).launch {
+                    val response = service.AddLeaveHalfDay(accountDetails.value?.userID.toString(), selectedTypeOfLeave.value.toString(), convertDateToStandardForm(startDate.value.toString()), selectedItem.value.toString())
+                    withContext(Dispatchers.Main) {
+                        try {
+                            if (response.isSuccessful) {
+                                val details = response.body()
+                                if(details?.status == "0")
+                                {
+                                    isFileLeaveSuccesful.value = true
+                                }
+                                else
+                                {
+                                    webServiceError.value = response.body()?.message
+                                    isFileLeaveSuccesful.value = false
+                                }
+                                showProgressbar.postValue(false)
+                            } else {
+                                webServiceError.postValue("Error: ${response.code()}")
+                                showProgressbar.postValue(false)
+                                isFileLeaveSuccesful.value = false
+                            }
+                        } catch (e: HttpException) {
+                            webServiceError.postValue("Exception ${e.message}")
+                            showProgressbar.postValue(false)
+                            isFileLeaveSuccesful.value = false
+                        } catch (e: Throwable) {
+                            webServiceError.postValue(e.message)
+                            showProgressbar.postValue(false)
+                            isFileLeaveSuccesful.value = false
+                        }
+                    }
+                }
             }
             else if(isFieldNullOrEmpty(selectedTypeOfLeave.value.toString()))
             {
@@ -88,29 +146,5 @@ class FileLeaveViewModel(application: Application) : AndroidViewModel(applicatio
             return true
         }
         return false
-    }
-
-    override fun beforeNetworkCall() {
-        showProgressbar.value = true
-    }
-
-    override fun afterNetworkCall(result: String?){
-        showProgressbar.value = false
-        try {
-            val jsonObject = JSONObject(result!!)
-            val status = jsonObject.get("status").toString()
-            if(status == "0")
-            {
-                isFileLeaveSuccesful.value = true
-            }
-            else
-            {
-                webServiceError.value = jsonObject.get("message").toString()
-                isFileLeaveSuccesful.value = false
-            }
-        } catch (ex: Exception){
-            webServiceError.value = result
-            isFileLeaveSuccesful.value = false
-        }
     }
 }

@@ -4,17 +4,10 @@ import android.app.Application
 import androidx.lifecycle.*
 import com.example.terasystemhrisv3.model.AccountDetails
 import com.example.terasystemhrisv3.model.Logs
-import com.example.terasystemhrisv3.service.WebServiceConnection
-import com.example.terasystemhrisv3.interfaces.NetworkRequestInterface
-import com.example.terasystemhrisv3.model.GsonAccountDetails
-import com.example.terasystemhrisv3.model.GsonLogs
 import com.example.terasystemhrisv3.service.RetrofitFactory
 import com.example.terasystemhrisv3.util.*
-import com.google.gson.Gson
 import kotlinx.coroutines.*
-import org.json.JSONObject
 import retrofit2.HttpException
-import java.net.URLEncoder
 import java.util.ArrayList
 
 class LogsViewModel(application: Application) : AndroidViewModel(application) {
@@ -53,11 +46,11 @@ class LogsViewModel(application: Application) : AndroidViewModel(application) {
                                 for (i in 0 until details.timeLogs!!.count()) {
                                     logsHolder = Logs("","","","","","")
                                     logsHolder.userID = details.timeLogs!![i].userID
-                                    logsHolder.date = details.timeLogs!![i].date?.let { convertDateToHumanDate(it) }
-                                    logsHolder.timeIn = details.timeLogs!![i].timeIn?.let { convertTimeToStandardTime(it) }
-                                    logsHolder.breakOut = details.timeLogs!![i].timeOut?.let { convertTimeToStandardTime(it) }
-                                    logsHolder.breakIn = details.timeLogs!![i].breakIn?.let { convertTimeToStandardTime(it) }
-                                    logsHolder.timeOut = details.timeLogs!![i].breakOut?.let { convertTimeToStandardTime(it) }
+                                    logsHolder.date = details.timeLogs!![i].date?.let { date -> convertDateToHumanDate(date) }
+                                    logsHolder.timeIn = details.timeLogs!![i].timeIn?.let { timeIn -> convertTimeToStandardTime(timeIn) }
+                                    logsHolder.breakOut = details.timeLogs!![i].timeOut?.let { timeOut -> convertTimeToStandardTime(timeOut) }
+                                    logsHolder.breakIn = details.timeLogs!![i].breakIn?.let { breakIn -> convertTimeToStandardTime(breakIn) }
+                                    logsHolder.timeOut = details.timeLogs!![i].breakOut?.let { breakOut -> convertTimeToStandardTime(breakOut) }
                                     logs.value = logsHolder
                                     logsListHolder.add(logs.value!!)
                                 }
