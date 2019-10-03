@@ -38,31 +38,42 @@ class LoginViewModel(application: Application) : AndroidViewModel(application) {
             showProgressbar.value = true
             val service = RetrofitFactory.makeRetrofitService()
             CoroutineScope(coroutineContext).launch {
-                val response = service.Login(username.value, password.value)
-                withContext(Dispatchers.Main) {
-                    try {
-                        if (response.isSuccessful) {
-                            val details = response.body()
-                            if(details?.status == "0")
-                            {
-                                accountDetails.value = details.user
+                try{
+                    val response = service.Login(username.value, password.value)
+                    withContext(Dispatchers.Main) {
+                        try {
+                            if (response.isSuccessful) {
+                                val details = response.body()
+                                if(details?.status == "0")
+                                {
+                                    accountDetails.value = details.user
+                                }
+                                else
+                                {
+                                    loginError.value = response.body()?.message
+                                }
+                                showProgressbar.postValue(false)
+                            } else {
+                                loginError.postValue("Error: ${response.code()}")
+                                showProgressbar.postValue(false)
                             }
-                            else
-                            {
-                                loginError.value = response.body()?.message
-                            }
+                        } catch (e: HttpException) {
+                            loginError.postValue("Exception ${e.message}")
                             showProgressbar.postValue(false)
-                        } else {
-                            loginError.postValue("Error: ${response.code()}")
+                        } catch (e: Throwable) {
+                            loginError.postValue(e.message)
                             showProgressbar.postValue(false)
                         }
-                    } catch (e: HttpException) {
-                        loginError.postValue("Exception ${e.message}")
-                        showProgressbar.postValue(false)
-                    } catch (e: Throwable) {
-                        loginError.postValue(e.message)
-                        showProgressbar.postValue(false)
                     }
+                } catch (e: java.net.ConnectException){
+                    webServiceError.postValue("Could not connect to the server")
+                    showProgressbar.postValue(false)
+                } catch (e: java.net.SocketTimeoutException) {
+                    webServiceError.postValue("Connection timed out")
+                    showProgressbar.postValue(false)
+                } catch (e: Exception){
+                    webServiceError.postValue(e.message)
+                    showProgressbar.postValue(false)
                 }
             }
         }

@@ -24,6 +24,13 @@ class LeavesListViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
             view.leaveType.text = leaves.type
             view.numberOfDays.text = leaves.time
         }
+        else if(leaves.dateFrom == leaves.dateTo)
+        {
+            dateFrom = leaves.dateFrom!!
+            view.leaveDuration.text = dateFrom
+            view.leaveType.text = leaves.type
+            view.numberOfDays.text = leaves.time
+        }
         else
         {
             dateFrom = leaves.dateFrom!!

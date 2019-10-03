@@ -106,35 +106,46 @@ class UpdateViewModel(application: Application) : AndroidViewModel(application) 
                 showProgressbar.value = true
                 val service = RetrofitFactory.makeRetrofitService()
                 CoroutineScope(coroutineContext).launch {
-                    val response = service.Update(userID.value!!, firstName.value!!, middleName.value.toString(), lastName.value!!, emailAddress.value!!, mobileNumber.value?.replace(" ", "").toString(), landline.value?.replace(" ", "").toString())
-                    withContext(Dispatchers.Main) {
-                        try {
-                            if (response.isSuccessful) {
-                                val details = response.body()
-                                if(details?.status == "0")
-                                {
-                                    isUpdateSuccessful.value = true
-                                }
-                                else
-                                {
-                                    webServiceError.value = response.body()?.message
+                    try{
+                        val response = service.Update(userID.value!!, firstName.value!!, middleName.value.toString(), lastName.value!!, emailAddress.value!!, mobileNumber.value?.replace(" ", "").toString(), landline.value?.replace(" ", "").toString())
+                        withContext(Dispatchers.Main) {
+                            try {
+                                if (response.isSuccessful) {
+                                    val details = response.body()
+                                    if(details?.status == "0")
+                                    {
+                                        isUpdateSuccessful.value = true
+                                    }
+                                    else
+                                    {
+                                        webServiceError.value = response.body()?.message
+                                        isUpdateSuccessful.value = false
+                                    }
+                                    showProgressbar.postValue(false)
+                                } else {
+                                    webServiceError.postValue("Error: ${response.code()}")
+                                    showProgressbar.postValue(false)
                                     isUpdateSuccessful.value = false
                                 }
+                            } catch (e: HttpException) {
+                                webServiceError.postValue("Exception ${e.message}")
                                 showProgressbar.postValue(false)
-                            } else {
-                                webServiceError.postValue("Error: ${response.code()}")
+                                isUpdateSuccessful.value = false
+                            } catch (e: Throwable) {
+                                webServiceError.postValue(e.message)
                                 showProgressbar.postValue(false)
                                 isUpdateSuccessful.value = false
                             }
-                        } catch (e: HttpException) {
-                            webServiceError.postValue("Exception ${e.message}")
-                            showProgressbar.postValue(false)
-                            isUpdateSuccessful.value = false
-                        } catch (e: Throwable) {
-                            webServiceError.postValue(e.message)
-                            showProgressbar.postValue(false)
-                            isUpdateSuccessful.value = false
                         }
+                    } catch (e: java.net.ConnectException){
+                        webServiceError.postValue("Could not connect to the server")
+                        showProgressbar.postValue(false)
+                    } catch (e: java.net.SocketTimeoutException) {
+                        webServiceError.postValue("Connection timed out")
+                        showProgressbar.postValue(false)
+                    } catch (e: Exception){
+                        webServiceError.postValue(e.message)
+                        showProgressbar.postValue(false)
                     }
                 }
             }

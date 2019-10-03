@@ -41,35 +41,46 @@ class FileLeaveViewModel(application: Application) : AndroidViewModel(applicatio
                 showProgressbar.value = true
                 val service = RetrofitFactory.makeRetrofitService()
                 CoroutineScope(coroutineContext).launch {
-                    val response = service.AddLeaveWholeDay(accountDetails.value?.userID.toString(), selectedTypeOfLeave.value.toString(), convertDateToStandardForm(startDate.value.toString()), convertDateToStandardForm(endDate.value.toString()), selectedItem.value.toString())
-                    withContext(Dispatchers.Main) {
-                        try {
-                            if (response.isSuccessful) {
-                                val details = response.body()
-                                if(details?.status == "0")
-                                {
-                                    isFileLeaveSuccesful.value = true
-                                }
-                                else
-                                {
-                                    webServiceError.value = response.body()?.message
+                    try{
+                        val response = service.AddLeaveWholeDay(accountDetails.value?.userID.toString(), selectedTypeOfLeave.value.toString(), convertDateToStandardForm(startDate.value.toString()), convertDateToStandardForm(endDate.value.toString()), selectedItem.value.toString())
+                        withContext(Dispatchers.Main) {
+                            try {
+                                if (response.isSuccessful) {
+                                    val details = response.body()
+                                    if(details?.status == "0")
+                                    {
+                                        isFileLeaveSuccesful.value = true
+                                    }
+                                    else
+                                    {
+                                        webServiceError.value = response.body()?.message
+                                        isFileLeaveSuccesful.value = false
+                                    }
+                                    showProgressbar.postValue(false)
+                                } else {
+                                    webServiceError.postValue("Error: ${response.code()}")
+                                    showProgressbar.postValue(false)
                                     isFileLeaveSuccesful.value = false
                                 }
+                            } catch (e: HttpException) {
+                                webServiceError.postValue("Exception ${e.message}")
                                 showProgressbar.postValue(false)
-                            } else {
-                                webServiceError.postValue("Error: ${response.code()}")
+                                isFileLeaveSuccesful.value = false
+                            } catch (e: Throwable) {
+                                webServiceError.postValue(e.message)
                                 showProgressbar.postValue(false)
                                 isFileLeaveSuccesful.value = false
                             }
-                        } catch (e: HttpException) {
-                            webServiceError.postValue("Exception ${e.message}")
-                            showProgressbar.postValue(false)
-                            isFileLeaveSuccesful.value = false
-                        } catch (e: Throwable) {
-                            webServiceError.postValue(e.message)
-                            showProgressbar.postValue(false)
-                            isFileLeaveSuccesful.value = false
                         }
+                    } catch (e: java.net.ConnectException){
+                        webServiceError.postValue("Could not connect to the server")
+                        showProgressbar.postValue(false)
+                    } catch (e: java.net.SocketTimeoutException) {
+                        webServiceError.postValue("Connection timed out")
+                        showProgressbar.postValue(false)
+                    } catch (e: Exception){
+                        webServiceError.postValue(e.message)
+                        showProgressbar.postValue(false)
                     }
                 }
             }
@@ -78,35 +89,46 @@ class FileLeaveViewModel(application: Application) : AndroidViewModel(applicatio
                 showProgressbar.value = true
                 val service = RetrofitFactory.makeRetrofitService()
                 CoroutineScope(coroutineContext).launch {
-                    val response = service.AddLeaveHalfDay(accountDetails.value?.userID.toString(), selectedTypeOfLeave.value.toString(), convertDateToStandardForm(startDate.value.toString()), selectedItem.value.toString())
-                    withContext(Dispatchers.Main) {
-                        try {
-                            if (response.isSuccessful) {
-                                val details = response.body()
-                                if(details?.status == "0")
-                                {
-                                    isFileLeaveSuccesful.value = true
-                                }
-                                else
-                                {
-                                    webServiceError.value = response.body()?.message
+                    try{
+                        val response = service.AddLeaveHalfDay(accountDetails.value?.userID.toString(), selectedTypeOfLeave.value.toString(), convertDateToStandardForm(startDate.value.toString()), selectedItem.value.toString())
+                        withContext(Dispatchers.Main) {
+                            try {
+                                if (response.isSuccessful) {
+                                    val details = response.body()
+                                    if(details?.status == "0")
+                                    {
+                                        isFileLeaveSuccesful.value = true
+                                    }
+                                    else
+                                    {
+                                        webServiceError.value = response.body()?.message
+                                        isFileLeaveSuccesful.value = false
+                                    }
+                                    showProgressbar.postValue(false)
+                                } else {
+                                    webServiceError.postValue("Error: ${response.code()}")
+                                    showProgressbar.postValue(false)
                                     isFileLeaveSuccesful.value = false
                                 }
+                            } catch (e: HttpException) {
+                                webServiceError.postValue("Exception ${e.message}")
                                 showProgressbar.postValue(false)
-                            } else {
-                                webServiceError.postValue("Error: ${response.code()}")
+                                isFileLeaveSuccesful.value = false
+                            } catch (e: Throwable) {
+                                webServiceError.postValue(e.message)
                                 showProgressbar.postValue(false)
                                 isFileLeaveSuccesful.value = false
                             }
-                        } catch (e: HttpException) {
-                            webServiceError.postValue("Exception ${e.message}")
-                            showProgressbar.postValue(false)
-                            isFileLeaveSuccesful.value = false
-                        } catch (e: Throwable) {
-                            webServiceError.postValue(e.message)
-                            showProgressbar.postValue(false)
-                            isFileLeaveSuccesful.value = false
                         }
+                    } catch (e: java.net.ConnectException){
+                        webServiceError.postValue("Could not connect to the server")
+                        showProgressbar.postValue(false)
+                    } catch (e: java.net.SocketTimeoutException) {
+                        webServiceError.postValue("Connection timed out")
+                        showProgressbar.postValue(false)
+                    } catch (e: Exception){
+                        webServiceError.postValue(e.message)
+                        showProgressbar.postValue(false)
                     }
                 }
             }

@@ -48,53 +48,58 @@ class LeavesViewModel(application: Application, retrievedAccountDetails: Account
             leavesList.value?.clear()
             leavesListHolder.clear()
             CoroutineScope(coroutineContext).launch {
-                val response = service.GetLeaves(accountDetails.value?.userID)
-                withContext(Dispatchers.Main) {
-                    try {
-                        if (response.isSuccessful) {
-                            val details = response.body()
-                            if(details?.status == "0")
-                            {
-                                remVL = 13.0
-                                remSL = 13.0
-                                for (i in 0 until details.leaves!!.count()) {
-                                    leavesHolder = Leaves("","","","","")
-                                    leavesHolder.userID = details.leaves!![i].userID
-                                    leavesHolder.type = details.leaves!![i].type?.let { type -> convertLeaveTypeToReadableForm(type) }
-                                    leavesHolder.dateFrom = details.leaves!![i].dateFrom?.let { dateFrom -> convertDateToHumanDate(dateFrom) }
-                                    leavesHolder.dateTo = details.leaves!![i].dateTo?.let { dateTo -> convertDateToHumanDate(dateTo) }
-                                    leavesHolder.time = convertTimeToReadableForm(details.leaves!![i].time.toString(), details.leaves!![i].dateFrom.toString(), details.leaves!![i].dateTo.toString())
-                                    if(leavesHolder.type == "Vacation Leave")
-                                    {
-                                        remVL -= leavesHolder.time!!.toFloat()
+                try {
+                    val response = service.GetLeaves(accountDetails.value?.userID)
+                    withContext(Dispatchers.Main) {
+                        try {
+                            if (response.isSuccessful) {
+                                val details = response.body()
+                                if (details?.status == "0") {
+                                    remVL = 13.0
+                                    remSL = 13.0
+                                    for (i in 0 until details.leaves!!.count()) {
+                                        leavesHolder = Leaves("", "", "", "", "")
+                                        leavesHolder.userID = details.leaves!![i].userID
+                                        leavesHolder.type = details.leaves!![i].type?.let { type -> convertLeaveTypeToReadableForm(type) }
+                                        leavesHolder.dateFrom = details.leaves!![i].dateFrom?.let { dateFrom -> convertDateToHumanDate(dateFrom) }
+                                        leavesHolder.dateTo = details.leaves!![i].dateTo?.let { dateTo -> convertDateToHumanDate(dateTo) }
+                                        leavesHolder.time = convertTimeToReadableForm(details.leaves!![i].time.toString(), details.leaves!![i].dateFrom.toString(), details.leaves!![i].dateTo.toString())
+                                        if (leavesHolder.type == "Vacation Leave") {
+                                            remVL -= leavesHolder.time!!.toFloat()
+                                        } else {
+                                            remSL -= leavesHolder.time!!.toFloat()
+                                        }
+                                        leaves.value = leavesHolder
+                                        leavesListHolder.add(leaves.value!!)
                                     }
-                                    else
-                                    {
-                                        remSL -= leavesHolder.time!!.toFloat()
-                                    }
-                                    leaves.value = leavesHolder
-                                    leavesListHolder.add(leaves.value!!)
+                                    showRecyclerView.value = true
+                                    showRemSLAndRemVL.value = true
+                                    leavesList.value = leavesListHolder
+                                } else {
+                                    webServiceError.value = response.body()?.message
                                 }
-                                showRecyclerView.value = true
-                                showRemSLAndRemVL.value = true
-                                leavesList.value = leavesListHolder
+                                showProgressbar.postValue(false)
+                            } else {
+                                webServiceError.postValue("Error: ${response.code()}")
+                                showProgressbar.postValue(false)
                             }
-                            else
-                            {
-                                webServiceError.value = response.body()?.message
-                            }
+                        } catch (e: HttpException) {
+                            webServiceError.postValue("Exception ${e.message}")
                             showProgressbar.postValue(false)
-                        } else {
-                            webServiceError.postValue("Error: ${response.code()}")
+                        } catch (e: Throwable) {
+                            webServiceError.postValue(e.message)
                             showProgressbar.postValue(false)
                         }
-                    } catch (e: HttpException) {
-                        webServiceError.postValue("Exception ${e.message}")
-                        showProgressbar.postValue(false)
-                    } catch (e: Throwable) {
-                        webServiceError.postValue(e.message)
-                        showProgressbar.postValue(false)
                     }
+                } catch (e: java.net.ConnectException){
+                    webServiceError.postValue("Could not connect to the server")
+                    showProgressbar.postValue(false)
+                } catch (e: java.net.SocketTimeoutException) {
+                    webServiceError.postValue("Connection timed out")
+                    showProgressbar.postValue(false)
+                } catch (e: Exception){
+                    webServiceError.postValue(e.message)
+                    showProgressbar.postValue(false)
                 }
             }
         }
